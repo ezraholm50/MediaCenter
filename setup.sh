@@ -144,32 +144,8 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Do you want to install a real certificate from Letsencrypt to secure your WAN access to the server.?") ]]
 then
 	wget $REPO/letsencrypt.sh -P $SCRIPTS/
-	cat << STARTMSG
-+---------------------------------------------------------------+
-|       Important! Please read this!                            |
-|                                                               |
-|       This script will install SSL from Let's Encrypt.        |
-|       It's free of charge, and very easy to use.              |
-|                                                               |
-|       Before we begin the installation you need to have       |
-|       a domain.                                               |
-|       If you don't have a domian yet, get one before          |
-|       you run this script!                                    |
-|								|
-|       You also have to open port 443 against this machine     |
-|       IP address: $ADDRESS - do this in your router.  |
-|       Here is a guide: https://goo.gl/Uyuf65                  |
-|                                                               |
-|       This script is located in /var/scripts and you          |
-|       can run this script after you got a domain.             |
-|                                                               |
-|       Please don't run this script IF you don't have		|
-|       a domain yet. You can get one for a fair price here:	|
-|       https://www.citysites.eu/                               |
-|                                                               |
-+---------------------------------------------------------------+
-
-STARTMSG
+	wget $REPO/echo_letsencrypt.sh -P $SCRIPTS/
+	bash $SCRIPTS/echo_letsencrypt.sh
 
 	function ask_yes_or_no() {
     	read -p "$1 ([y]es or [N]o): "
