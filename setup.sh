@@ -22,6 +22,10 @@ COUNTRY="nl" # use your own 2 letter country code for best speeds of the ubuntu/
         exit 1
 fi
 
+# Set swappiness to 1
+echo "vm.swappiness = 1" >> /etc/sysctl.conf
+sysctl vm.swappiness=1
+
 # Use Comodo secure dns
 echo "nameserver 8.26.56.26" >> /etc/resolvconf/resolv.conf.d/base
 echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
@@ -540,10 +544,93 @@ cd ~/AtoMiC-ToolKit
 sudo bash setup.sh
 cd
 
+# Teamspeak
+function ask_yes_or_no() {
+    read -p "$1 ([y]es or [N]o): "
+    case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
+        y|yes) echo "yes" ;;
+        *)     echo "no" ;;
+    esac
+}
+if [[ "yes" == $(ask_yes_or_no "Do you want to install Teamspeak?") ]]
+then
+# Add user
+useradd teamspeak3
+sed -i 's|:/home/teamspeak3:|:/home/teamspeak3:/usr/sbin/nologin|g' /etc/passwd
+
+# Get Teamspeak
+wget http://ftp.4players.de/pub/hosted/ts3/releases/3.0.10.3/teamspeak3-server_linux-amd64-3.0.10.3.tar.gz -P /tmp
+
+# Unpack Teamspeak
+tar xzf /tmp/teamspeak3-server_linux-amd64-3.0.10.3.tar.gz
+
+# Move to right directory
+mv /tmp/teamspeak3-server_linux-amd64 /usr/local/teamspeak3
+
+# Set ownership
+chown -R teamspeak3 /usr/local/teamspeak3
+
+# Add to upstart
+ln -s /usr/local/teamspeak3/ts3server_startscript.sh /etc/init.d/teamspeak3
+update-rc.d teamspeak3 defaults
+
+# Warning
+echo -e "\e[32m"
+echo    "+--------------------------------------------------------------------+"
+echo    "| Next you will need to copy/paste 3 things to a safe location       |"
+echo    "|                                                                    |"
+echo -e "|         \e[0mLOGIN, PASSWORD, SECURITY TOKEN\e[32m                            |"
+echo    "|                                                                    |"
+echo -e "|         \e[0mIF YOU FAIL TO DO SO, YOU HAVE TO REINSTALL YOUR SYSTEM\e[32m    |"
+echo -e "|         \e[0mIn 30 Sec the script will continue, so be quick!/e[32m           |"
+echo    "+--------------------------------------------------------------------+"
+echo
+read -p "Press any key to start copying the important stuff to a safe location..." -n1 -s
+echo -e "\e[0m"
+echo
+
+# Start service
+service teamspeak3 start && sleep 30
+echo
+function ask_yes_or_no() {
+    read -p "$1 ([y]es or [N]o): "
+    case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
+        y|yes) echo "yes" ;;
+        *)     echo "no" ;;
+    esac
+}
+if [[ "yes" == $(ask_yes_or_no "Did you copy all the details?") ]]
+then
+	sleep 1
+	echo
+else
+      sleep 30
+      echo "I will give you another 30 seconds, please hurry!"
+      echo
+fi
+
 # Update and upgrade again
 apt-get autoremove -y && apt-get autoclean && apt-get update && apt-get upgrade -y && apt-get -f install -y
 dpkg --configure --pending
 
 
 # Show access details
+	cat << STARTMSG
++---------------------------------------------------------------+
+|       You are done now, thank you for using this script!      |
+|       Please visit https://www.techandme.se                   |
+|       For more awsome guides, news and virtual machines       |
+|       It's free of charge, and very easy to use.              |
+|                                                               |
+|       System reboot required (notice the SSH port, if changed)|
++---------------------------------------------------------------+
+
+STARTMSG
+
+echo
+echo -e "\e[32m"
+read -p "Press any key to reboot..." -n1 -s
+echo -e "\e[0m"
+echo
+
 exit
