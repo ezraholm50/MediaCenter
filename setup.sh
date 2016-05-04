@@ -30,6 +30,11 @@ echo "nameserver 8.26.56.26" >> /etc/resolvconf/resolv.conf.d/base
 echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
 resolvconf -u
 
+# Update and upgrade and install many packages
+apt-get update && apt-get upgrade -y && apt-get -f install -y
+apt-get install openssh-server nano rsync sudo dialog linux-firmware wget clamav fail2ban -y
+apt-get install --no-install-recommends network-manager -y
+
 # Change to home country repo
 sed -i "s|gb|$COUNTRY|g" /etc/apt/sources.list
 
@@ -93,13 +98,8 @@ bash /var/scripts/test_connection.sh
 sleep 2
 clear
 
-# Update and upgrade and install many packages
-apt-get update && apt-get upgrade -y && apt-get -f install -y
-apt-get install openssh-server nano rsync sudo dialog linux-firmware wget clamav fail2ban systemd rsyslog -y
-apt-get install --no-install-recommends network-manager -y
-
 # ClamAv
-mkdir /infected
+mkdir -p /infected
 chmod -R nobody:nogroup /infected
 chown -R 000 /infected
 echo "freshclam && clamscan -r --move=/infected / && chown -R nodbody:nogroup /infected && chmod -R 000 /infected " >> /etc/cron.daily/clamscan.sh
