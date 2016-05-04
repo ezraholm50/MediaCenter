@@ -22,6 +22,13 @@
 * Set a static IP in the machine (router needs to be done aswell)
 * Set dns to Comodo secure dns
 
+# To do
+
+* Have the option to install ownCloud @enoch85
+* Samba
+* Backups
+* Post requests [HERE](https://github.com/ezraholm50/MediaCenter/issues/1)
+
 # Tech and Me
 
 We at [Tech and Me](https://www.techandme.se) dedicate our time building and maintaining Virtual Machines so that the less skilled users can benefit from easy setup servers.
