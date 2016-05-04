@@ -120,7 +120,21 @@ apt-get install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtim
 dpkg --install /tmp/webmin_1.791_all.deb
 
 # Letsencrypt
-
+function ask_yes_or_no() {
+    read -p "$1 ([y]es or [N]o): "
+    case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
+        y|yes) echo "yes" ;;
+        *)     echo "no" ;;
+    esac
+}
+if [[ "yes" == $(ask_yes_or_no "Do you want to install a real certificate from Letsencrypt to secure your WAN access to the server.?") ]]
+then
+	wget $REPO/letsencrypt.sh -P $SCRIPTS/
+	bash $SCRIPTS/letsencrypt.sh
+else
+sleep 1
+fi
+exit 0
 
 # DynDns
 function ask_yes_or_no() {
@@ -155,22 +169,25 @@ function ask_yes_or_no() {
 }
 if [[ "yes" == $(ask_yes_or_no "Install PLEX Public?") ]]
 then
+        apt-get install git -y
         wget https://downloads.plex.tv/plex-media-server/0.9.16.6.1993-5089475/plexmediaserver_0.9.16.6.1993-5089475_amd64.deb -P /tmp/
-dpkg -i /tmp/0.9.16.6.1993-5089475/plexmediaserver_0.9.16.6.1993-5089475_amd64.deb
-cd /root
-git clone https://github.com/mrworf/plexupdate.git
-touch /root/.plexupdate
-cat <<-SOURCES > "/root/.plexupdate"
-DOWNLOADDIR="/tmp"
-RELEASE="64"
-KEEP=no
-FORCE=no
-PUBLIC=yes
-AUTOINSTALL=yes
-AUTODELETE=yes
-AUTOUPDATE=yes
+	dpkg -i /tmp/0.9.16.6.1993-5089475/plexmediaserver_0.9.16.6.1993-5089475_amd64.deb
+	cd /root
+	git clone https://github.com/mrworf/plexupdate.git
+	touch /root/.plexupdate
+	cat <<-PLEX > "/root/.plexupdate"
+	DOWNLOADDIR="/tmp"
+	RELEASE="64"
+	KEEP=no
+	FORCE=no
+	PUBLIC=yes
+	AUTOINSTALL=yes
+	AUTODELETE=yes
+	AUTOUPDATE=yes
         AUTOSTART=yes
-
+	PLEX
+	echo "bash /root/plexupdate/plexupdate.sh" >> /etc/cron.daily/plex.sh
+	chmod 754 /etc/cron.daily/plex.sh
 else
       echo
       echo "No plex, ok moving on..."
