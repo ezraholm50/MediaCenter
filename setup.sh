@@ -163,7 +163,7 @@ then
 |       This script is located in /var/scripts and you          |
 |       can run this script after you got a domain.             |
 |                                                               |
-|       Please don't run this script if you don't have		|
+|       Please don't run this script IF you don't have		|
 |       a domain yet. You can get one for a fair price here:	|
 |       https://www.citysites.eu/                               |
 |                                                               |
