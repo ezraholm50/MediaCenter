@@ -83,7 +83,8 @@ clear
 
 # Update and upgrade and install many packages
 apt-get update && apt-get upgrade -y && apt-get -f install -y
-apt-get install openssh-server nano rsync sudo dialog linux-firmware clamav fail2ban systemd rsyslog -y
+apt-get install openssh-server nano rsync sudo dialog linux-firmware wget clamav fail2ban systemd rsyslog -y
+apt-get install --no-install-recommends network-manager -y
 
 # ClamAv
 mkdir /infected
@@ -529,5 +530,9 @@ git clone https://github.com/htpcBeginner/AtoMiC-ToolKit ~/AtoMiC-ToolKit
 cd ~/AtoMiC-ToolKit
 sudo bash setup.sh
 cd
+
+# Update and upgrade again
+apt-get autoremove -y && apt-get autoclean && apt-get update && apt-get upgrade -y && apt-get -f install -y
+dpkg --configure --pending
 
 exit
