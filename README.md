@@ -4,8 +4,8 @@
 
 # How to:
 
-* ```wget https://github.com/ezraholm50/MediaCenter/raw/master/setup.sh```
-* ```bash setup.sh```
+* ```sudo wget https://github.com/ezraholm50/MediaCenter/raw/master/setup.sh```
+* ```sudo bash setup.sh```
 
 # This script will:
 * Install Webmin
