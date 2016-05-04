@@ -152,7 +152,7 @@ then
 |       It's free of charge, and very easy to use.              |
 |                                                               |
 |       Before we begin the installation you need to have       |
-|       a domain that the SSL certs will be valid for.          |
+|       a domain.                                               |
 |       If you don't have a domian yet, get one before          |
 |       you run this script!                                    |
 |								|
