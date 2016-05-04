@@ -2,7 +2,6 @@
 #
 # Tech and Me, 2016 - www.techandme.se
 #
-# Var's
 IFCONFIG="/sbin/ifconfig"
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
