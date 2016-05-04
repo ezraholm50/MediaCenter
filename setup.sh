@@ -268,6 +268,12 @@ then
         wget https://downloads.plex.tv/plex-media-server/0.9.16.6.1993-5089475/plexmediaserver_0.9.16.6.1993-5089475_amd64.deb -P /tmp/
 	dpkg -i /tmp/plexmediaserver_0.9.16.6.1993-5089475_amd64.deb
 	cd /root
+	
+if 		[ -d /root/plexupdate ];
+then
+	rm -r /root/plexupdate
+fi
+
 	git clone https://github.com/mrworf/plexupdate.git
 	touch /root/.plexupdate
 	cat <<-PLEX > "/root/.plexupdate"
@@ -281,8 +287,14 @@ then
 	AUTOUPDATE=yes
         AUTOSTART=yes
 	PLEX
+if 		[ -f /etc/cron.daily/plex.sh ];
+then
+	sleep 1
+else
 	echo "bash /root/plexupdate/plexupdate.sh" >> /etc/cron.daily/plex.sh
 	chmod 754 /etc/cron.daily/plex.sh
+fi
+
 else
       echo
       echo "No plex, ok moving on..."
