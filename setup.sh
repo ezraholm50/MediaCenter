@@ -535,4 +535,6 @@ cd
 apt-get autoremove -y && apt-get autoclean && apt-get update && apt-get upgrade -y && apt-get -f install -y
 dpkg --configure --pending
 
+
+# Show access details
 exit
