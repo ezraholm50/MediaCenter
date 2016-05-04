@@ -266,7 +266,7 @@ if [[ "yes" == $(ask_yes_or_no "Install PLEX Public?") ]]
 then
         apt-get install git -y
         wget https://downloads.plex.tv/plex-media-server/0.9.16.6.1993-5089475/plexmediaserver_0.9.16.6.1993-5089475_amd64.deb -P /tmp/
-	dpkg -i /tmp/0.9.16.6.1993-5089475/plexmediaserver_0.9.16.6.1993-5089475_amd64.deb
+	dpkg -i /tmp/plexmediaserver_0.9.16.6.1993-5089475_amd64.deb
 	cd /root
 	git clone https://github.com/mrworf/plexupdate.git
 	touch /root/.plexupdate
@@ -286,6 +286,7 @@ then
 else
       echo
       echo "No plex, ok moving on..."
+      echo
 fi
 
 # nginx
@@ -302,6 +303,7 @@ then
 else
       echo
       echo "No Nginx, ok moving on..."
+      echo
 fi
 
 # nfs server
@@ -318,6 +320,7 @@ then
 else
       echo
       echo "No Nfs Server, ok moving on..."
+      echo
 fi
 
 # nfs client yes no?
@@ -334,6 +337,7 @@ then
 else
       echo
       echo "No Nfs Client, ok moving on..."
+      echo
 fi
 
 # Update and upgrade again
@@ -343,6 +347,7 @@ dpkg --configure --pending
 # Set ufw ports
 ufw allow 22
 ufw allow 10000
+echo
 
 # ufw port 443 and 80
 function ask_yes_or_no() {
@@ -356,8 +361,10 @@ if [[ "yes" == $(ask_yes_or_no "Open port 443 and 80?") ]]
 then
       ufw allow 443
       ufw allow 80
+      echo
 else
       sleep 1
+      echo
 fi
 
 # ufw port 32400
@@ -371,8 +378,10 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Open port 32400?") ]]
 then
       ufw allow 32400
+      echo
 else
       sleep 1
+      echo
 fi
 
 # ufw port 9090
@@ -386,8 +395,10 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Open port 9090?") ]]
 then
       ufw allow 9090
+      echo
 else
       sleep 1
+      echo
 fi
 
 # ufw port 8989
@@ -401,8 +412,10 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Open port 8989?") ]]
 then
       ufw allow 8989
+      echo
 else
       sleep 1
+      echo
 fi
 
 # ufw port 5050
@@ -416,8 +429,10 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Open port 5050?") ]]
 then
       ufw allow 5050
+      echo
 else
       sleep 1
+      echo
 fi
 
 # ufw port 8181
@@ -431,8 +446,10 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Open port 8181?") ]]
 then
       ufw allow 8181
+      echo
 else
       sleep 1
+      echo
 fi
 
 # ufw port 8085
@@ -446,8 +463,10 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Open port 8085?") ]]
 then
       ufw allow 8085
+      echo
 else
       sleep 1
+      echo
 fi
 
 # ufw port 2049
@@ -461,8 +480,10 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Open port 2049, NFS?") ]]
 then
       ufw allow 2049
+      echo
 else
       sleep 1
+      echo
 fi
 
 # ufw
@@ -476,8 +497,10 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Enable UFW?") ]]
 then
       ufw enable
+      echo
 else
       sleep 1
+      echo
 fi
 
 # Install AtoMiC ToolKit
@@ -487,9 +510,12 @@ echo -e "\e[0mNote that Webmin and Plex are already installed. You can re-run th
 echo -e "\e[32m"
 read -p "Press any key to begin..." -n1 -s
 echo -e "\e[0m"
+echo
 
 apt-get -y install git-core
 git clone https://github.com/htpcBeginner/AtoMiC-ToolKit ~/AtoMiC-ToolKit
 cd ~/AtoMiC-ToolKit
 sudo bash setup.sh
 cd
+
+exit
