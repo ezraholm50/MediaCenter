@@ -604,8 +604,9 @@ STARTMSG
 
 echo
 echo -e "\e[32m"
-read -p "Press any key to reboot..." -n1 -s
+read -p "Press any key to reboot... or ctrl+c to cancel the reboot" -n1 -s
 echo -e "\e[0m"
 echo
+reboot
 
 exit
