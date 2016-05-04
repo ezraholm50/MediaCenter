@@ -172,7 +172,6 @@ then
     	echo -e "\e[32m"
     	read -p "Press any key to continue... " -n1 -s
     	echo -e "\e[0m"
-exit
 fi
 
         function ask_yes_or_no() {
@@ -189,7 +188,6 @@ then
         echo -e "\e[32m"
         read -p "Press any key to continue... " -n1 -s
         echo -e "\e[0m"
-exit
 fi
 
     	function ask_yes_or_no() {
@@ -208,7 +206,6 @@ else
     	echo -e "\e[32m"
     	read -p "Press any key to continue... " -n1 -s
     	echo -e "\e[0m"
-exit
 fi
 
 # Install git
@@ -233,7 +230,6 @@ else
     	read -p "Press any key to continue... " -n1 -s
     	echo -e "\e[0m"
     	wget $REPO/letsencrypt.sh -P $SCRIPTS/
-exit
 fi
 
 # DynDns
@@ -257,7 +253,6 @@ then
 else
 sleep 1
 fi
-exit 0
 
 # Plex
 function ask_yes_or_no() {
