@@ -83,7 +83,7 @@ clear
 
 # Update and upgrade and install many packages
 apt-get update && apt-get upgrade -y && apt-get -f install -y
-apt-get install openssh-server nano sudo dialog linux-firmware clamav fail2ban systemd rsyslog
+apt-get install openssh-server nano sudo dialog linux-firmware clamav fail2ban systemd rsyslog -y
 
 # ClamAv
 mkdir /infected
