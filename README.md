@@ -10,6 +10,8 @@
 # This script will:
 * Install Webmin
 * Install SSH-server
+* Install Rsync
+* Install Nano
 * Install ClamAV and set daily scans and move infected files to /infected
 * Install Fail2Ban (Working on creating jails, need help)
 * Install and open [Atomic Toolkit](https://github.com/htpcBeginner/AtoMiC-ToolKit)
