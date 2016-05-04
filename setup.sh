@@ -318,6 +318,7 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Install NFS Server?") ]]
 then
       apt-get install nfs-kernel-server -y
+      ufw allow 2049
 else
       echo
       echo "No Nfs Server, ok moving on..."
@@ -335,6 +336,13 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Install NFS Client?") ]]
 then
       apt-get install nfs-common -y
+      ufw allow 2049
+      echo
+      echo "mount your share like this: mount -t nfs -o proto=tcp,port=2049 <nfs-server-IP>:/ /mount_point"
+      echo "auto mount like this: echo "<nfs-server-IP>:/   /mount_point   nfs    auto  0  0" >> /etc/fstab"
+      echo -e "\e[32m"
+      read -p "Press any key to continue..." -n1 -s
+      echo -e "\e[0m"
 else
       echo
       echo "No Nfs Client, ok moving on..."
@@ -464,23 +472,6 @@ function ask_yes_or_no() {
 if [[ "yes" == $(ask_yes_or_no "Open port 8085?") ]]
 then
       ufw allow 8085
-      echo
-else
-      sleep 1
-      echo
-fi
-
-# ufw port 2049
-function ask_yes_or_no() {
-    read -p "$1 ([y]es or [N]o): "
-    case $(echo $REPLY | tr '[A-Z]' '[a-z]') in
-        y|yes) echo "yes" ;;
-        *)     echo "no" ;;
-    esac
-}
-if [[ "yes" == $(ask_yes_or_no "Open port 2049, NFS?") ]]
-then
-      ufw allow 2049
       echo
 else
       sleep 1
