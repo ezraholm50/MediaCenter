@@ -16,7 +16,7 @@
 * Install Fail2Ban (Working on creating jails, need help)
 * Install and open [Atomic Toolkit](https://github.com/htpcBeginner/AtoMiC-ToolKit)
 * Install other various packages, see the setup.sh script for details.
-* Enable UFW, allow 10000, 22 and ask if you want to open 9090, 8989, 8181, 5050, 32400, 8822 (SSH, it also changes your ssh port and deny's 22)
+* UFW allow 10000, 22 and ask if you want to enable it and open 9090, 8989, 8181, 5050, 32400, 8822 (SSH, it also changes your ssh port and deny's 22)
 * Ask if you want to install Plex, Nginx, Teamspeak, NFS-client, NFS-server, DDCLIENT (domain DynDns), Letsencrypt (valid SSL cert.) 
 * Set swappiness to 1
 * Set a static IP in the machine (router needs to be done aswell)
