@@ -12,6 +12,7 @@ NETMASK=$($IFCONFIG $IFACE | grep Mask | sed s/^.*Mask://)
 GATEWAY=$($IP route | awk '/default/ { print $3 }')
 SCRIPTS="/var/scripts"
 REPO="https://github.com/ezraholm50/MediaCenter"
+COUNTRY="nl" # use your own 2 letter country code for best speeds of the ubuntu/other repo's in sources.list
 
 # Check if root
         if [ "$(whoami)" != "root" ]; then
@@ -25,6 +26,9 @@ fi
 echo "nameserver 8.26.56.26" >> /etc/resolvconf/resolv.conf.d/base
 echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
 resolvconf -u
+
+# Change to home country repo
+sed -i "s|gb|$COUNTRY|g" /etc/apt/sources.list
 
 # Make scripts dir
 mkdir -p $SCRIPTS
