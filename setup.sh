@@ -21,6 +21,11 @@ REPO="https://github.com/ezraholm50/MediaCenter"
         exit 1
 fi
 
+# Use Comodo secure dns
+echo "nameserver 8.26.56.26" >> /etc/resolvconf/resolv.conf.d/base
+echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
+resolvconf -u
+
 # Make scripts dir
 mkdir -p $SCRIPTS
 
