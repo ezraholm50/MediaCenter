@@ -28,6 +28,7 @@
 * Have the option to install ownCloud @enoch85
 * Samba
 * Backups
+* OpenVpn
 * Post requests [HERE](https://github.com/ezraholm50/MediaCenter/issues/1)
 
 # Tech and Me
