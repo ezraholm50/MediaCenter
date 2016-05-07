@@ -103,6 +103,10 @@ do_change_timezone() {
   dpkg-reconfigure tzdata
 }
 
+do_change_timezone() {
+  dpkg-reconfigure tzdata
+}
+
 do_change_hostname() {
   whiptail --msgbox "\
 Please note: RFCs mandate that a hostname's labels \
