@@ -1,0 +1,2 @@
+#!/bin/bash
+whiptail --title "https://www.techandme.se" --msgbox "Welcome to the techandme.se's Multi Installer. Choose Ok to enter the setup menu." 10 60
