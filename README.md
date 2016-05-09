@@ -8,21 +8,19 @@
 * ```sudo wget https://github.com/ezraholm50/MultiInstaller/raw/master/MultiInstaller.sh```
 * ```sudo bash /var/scripts/MultiInstaller.sh```
 
-# This script will:
-* Install Webmin
-* Install SSH-server
-* Install Rsync
-* Install Nano
+# This script can:
+* Install Rsync, Webmin, SSH
 * Install ClamAV and set daily scans and move infected files to /infected
 * Install Fail2Ban (Working on creating jails, need help)
 * Install and open [Atomic Toolkit](https://github.com/htpcBeginner/AtoMiC-ToolKit)
-* Install other various packages, see the setup.sh script for details.
-* UFW allow 10000, 22 and ask if you want to enable it and open 9090, 8989, 8181, 5050, 32400, 8822 (SSH, it also changes your ssh port and deny's 22)
-* Ask if you want to install Plex (also installs a public auto update script, for plexpass users a option will be added soon)
-* Ask if you want to install Nginx, Teamspeak, NFS-client, NFS-server, DDCLIENT (domain DynDns), Letsencrypt (valid SSL cert.) 
+* Install Plex (also installs a public auto update script, for plexpass users an option will be added soon)
+* Install Nginx, Teamspeak, NFS-client, NFS-server, DDCLIENT (domain DynDns), Letsencrypt (valid SSL cert.) 
+* Install other various packages, see the MultiInstaller.sh script for details.
+* Let you enable/disable the firewall and allow/deny ports: 10000, 22, 9090, 8989, 8181, 5050, 32400, 8822 and more
 * Set swappiness to 1
 * Set a static IP in the machine (router needs to be done aswell)
 * Set dns to Comodo secure dns
+* Much more!
 
 # To do
 
@@ -30,7 +28,7 @@
 * Samba
 * Backups
 * OpenVpn
-* Post requests [HERE](https://github.com/ezraholm50/MediaCenter/issues/1)
+* Post requests [HERE](https://github.com/ezraholm50/MultiInstaller/issues/1)
 
 # Tech and Me
 
