@@ -4,8 +4,9 @@
 
 # How to:
 
-* ```sudo wget https://github.com/ezraholm50/MediaCenter/raw/master/setup.sh```
-* ```sudo bash setup.sh```
+* ```sudo mkdir -p /var/scripts```
+* ```sudo wget https://github.com/ezraholm50/MultiInstaller/raw/master/MultiInstaller.sh```
+* ```sudo bash /var/scripts/MultiInstaller.sh```
 
 # This script will:
 * Install Webmin
