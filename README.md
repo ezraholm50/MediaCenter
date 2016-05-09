@@ -31,6 +31,8 @@
 * OpenVpn
 * Post requests [HERE](https://github.com/ezraholm50/MultiInstaller/issues/1)
 
+* CAREFULL THIS IS ALPHA SOFTWARE, USE AT YOUR OWN RISK
+
 # Tech and Me
 
 We at [Tech and Me](https://www.techandme.se) dedicate our time building and maintaining Virtual Machines so that the less skilled users can benefit from easy setup servers.
