@@ -33,43 +33,83 @@ at any time, some of the options may have difficulties if
 you have heavily customised your installation.\
 " 20 70 1
 }
-
-do_install() {
-  UFW=$(whiptail --menu "Firewall settings" 20 60 10 \
-    "Enable Firewall" "Text console, requiring login (default)" \
-    "Disable Firewall" "Log in as user 'ubuntu' at the graphical desktop" \
-    "Open port 10000" "Webmin" \
-    "Open port 32400" "Plex" \
-    "Open port 8080" "Sabnzbd" \
-    "Open port 9090" "Sabnzbd https (secure)" \
-    "Open port 8989" "Sonarr" \
-    "Open port 5050" "Couchpotato" \
-    "Open port 8181" "Headphones" \
-    "Open port 8085" "HTPC Manager" \
-    "Open port 8085" "HTPC Manager" \
-    "Open port 8085" "HTPC Manager" \
-    "Open port 8085" "HTPC Manager" \
-    "Open port 8085" "HTPC Manager" \
+#########################################Firewall########################################################
+do_firewall() {
+  FUN=$(whiptail --title "Firewall" --menu "UFW Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
+    "A1 Enable Firewall" "" \
+    "A2 Disable Firewall" "" \
+    "A3 Allow port xxx" "xxx" \
+    "A4 Allow port 32400" "Plex" \
+    "A5 Allow port 8989" "Sonarr" \
+    "A6 Allow port 5050" "Couchpotato" \
+    "A7 Allow port 8181" "Headphones" \
+    "A8 Allow port 8085" "HTPC Manager" \
+    "A9 Allow port xxx" "Sickbeard" \
+    "A10 Allow port 10000" "Webmin" \
+    "A11 Allow port 8080" "Sabnzbdplus" \
+    "A12 Allow port 9090" "Sabnzbdplus https" \
+    "A13 Allow port xxx" "xxx" \
+    "A14 Deny port xxx" "xxx" \
+    "A15 Deny port xxx" "xxx" \
+    "A16 Deny port xxx" "xxx" \
+    "A17 Deny port xxx" "xxx" \
+    "A18 Deny port xxx" "xxx" \
+    "A19 Deny port xxx" "xxx" \
+    "A20 Deny port xxx" "xxx" \
+    "A21 Deny port xxx" "xxx" \
+    "A22 Deny port xxx" "xxx" \
+    "A23 Deny port xxx" "xxx" \
+    "A24 Deny port xxx" "xxx" \
+    "A25 Deny port xxx" "xxx" \
+    "A26 Deny port xxx" "xxx" \
+    "A27 Deny port xxx" "xxx" \
+    "A28 Deny port xxx" "xxx" \
     3>&1 1>&2 2>&3)
-  if [ $? -eq 0 ]; then
-    case "$UFW" in
-      Console)
-        [ -e /etc/init.d/lightdm ] && update-rc.d lightdm disable 2
-        disable_boot_to_scratch
-        ;;
-      Enable)
-        sudo ufw enable
-        ;;
-      Disable)
-        sudo ufw disable
-        ;;
-      10000)
-        sudo ufw allow 10000
-    esac
-    ASK_TO_REBOOT=1
+  RET=$?
+  if [ $RET -eq 1 ]; then
+    return 0
+  elif [ $RET -eq 0 ]; then
+    case "$FUN" in
+      A1\ *) do_ufw_enable ;;
+      A2\ *) do_ufw_disable ;;
+      A3\ *) do_allow_ ;;
+      A4\ *) do_allow_32400 ;;
+      A5\ *) do_allow_8989 ;;
+      A6\ *) do_allow_5050 ;;
+      A7\ *) do_allow_8181 ;;
+      A8\ *) do_allow_8085 ;;
+      A9\ *) do_allow_ ;;
+      A10\ *) do_allow_10000 ;;
+      A11\ *) do_allow_8080 ;;
+      A12\ *) do_allow_9090 ;;
+      A13\ *) do_allow_ ;;
+      A14\ *) do_deny_ ;;
+      A15\ *) do_deny_ ;;
+      A16\ *) do_deny_ ;;
+      A17\ *) do_deny_ ;;
+      A18\ *) do_deny_ ;;
+      A19\ *) do_deny_ ;;
+      A20\ *) do_deny_ ;;
+      A21\ *) do_deny_ ;;
+      A22\ *) do_deny_ ;;
+      A23\ *) do_deny_ ;;
+      A24\ *) do_deny_ ;;
+      A25\ *) do_deny_ ;;
+      A26\ *) do_deny_ ;;
+      A27\ *) do_deny_ ;;
+      A28\ *) do_deny_ ;;
+      A29\ *) do_deny_ ;;
+      *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
+    esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 
+######Firewall variable's#######
+do_ufw_enable() {
+sudo ufw enable
+}
+
+#################################Firewall end##############################################
 # $1 is 0 to disable overscan, 1 to disable it
 do_overscan() {
   whiptail --yesno "What would you like to do with overscan" 20 60 2 \
@@ -97,10 +137,6 @@ do_configure_keyboard() {
 
 do_change_locale() {
   dpkg-reconfigure locales
-}
-
-do_change_timezone() {
-  dpkg-reconfigure tzdata
 }
 
 do_change_timezone() {
@@ -339,7 +375,7 @@ done
 
 # Everything else needs to be run as root
 if [ $(id -u) -ne 0 ]; then
-  printf "Script must be run as root. Try 'sudo bash /var/scripts/MultiInstaller.sh'\n"
+  printf "Script must be run as root. Try 'sudo raspi-config'\n"
   exit 1
 fi
 
@@ -420,14 +456,13 @@ while true; do
   FUN=$(whiptail --title "https://www.techandme.se" --menu "Multi Installer" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Finish --ok-button Select \
     "1 System tools" "Show a bunch of system stats" \
     "2 Change User Password" "Change password for the default user (ubuntu)" \
-    "3 " "" \
+    "3 Boot option" "Choose whether to boot into a desktop environment, or the command-line (Only use this if a GUI is installed)" \
     "4 Internationalisation Options" "Set up language and regional settings to match your location" \
     "5 Upgrade your distribution" "Tested on Ubuntu" \
     "6 Firewall options" "Choose whether to boot into a desktop environment, Scratch, or the command-line" \
     "7 Update system & tool" "Updates and upgrades packages and get the latest version of this tool" \
     "8 Install packages" "ClamAV, Teamspeak, Webmin, NFS, SSH etc." \
-    "9 Advanced menu" "Advanced options" \
-    "0 About Multi Installer" "Information about this tool" \
+    "9 About Multi Installer" "Information about this tool" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -442,8 +477,7 @@ while true; do
       6\ *) do_firewall ;;
       7\ *) do_update ;;
       8\ *) do_install_menu ;;
-      9\ *) do_advanced_menu ;;
-      0\ *) do_about ;;
+      9\ *) do_about ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   else
