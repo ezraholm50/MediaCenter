@@ -167,6 +167,7 @@ do_dist_upgrade() {
 }
 
 do_swappiness() {
+sed -i 's|vm.swappiness = |#vm.swappiness = |g' /etc/sysctl.conf
 echo "vm.swappiness = 1" >> /etc/sysctl.conf
 sysctl vm.swappiness=1
 }
