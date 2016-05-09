@@ -2,7 +2,7 @@
 # Part of raspi-config http://github.com/asb/raspi-config
 #
 # See LICENSE file for copyright and license details
-IFCONFIG="/sbin/ifconfig"
+IFCONFIG="ifconfig"
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
 INTERFACES="/etc/network/interfaces"
@@ -17,7 +17,7 @@ ASK_TO_REBOOT=0
 mkdir -p $SCRIPTS
 
 # Check if root
-        if [ "$(whoami)" != "root" ]; then
+if [ "$(whoami)" != "root" ]; then
         whiptail --msgbox "Sorry you are not root. You must type: sudo bash /var/scripts/MultiInstaller.sh" 20 60 1
 fi
 
@@ -65,9 +65,7 @@ do_tools() {
     "A7 Set swappiness to 1" "Avoid swapping when there's much RAM left"\
     "A8 Set DNS" "We will use Comodo secure DNS"\
     "A9 Change Repo's" "under construction"\
-    "A10 Change current users password" \
-    "A11 Change current users password" \
-    "A12 Change current users password" \
+    "A10 Set static IP" "Also please change it in your router"
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -84,9 +82,6 @@ do_tools() {
       A8\ *) do_comodo_dns ;;
       A9\ *) do_country_repo ;;
       A10\ *) do_static_ip ;;
-      A11\ *) do_change_pass ;;
-      A12\ *) do_change_pass ;;
-      A13\ *) do_change_pass ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
@@ -517,12 +512,14 @@ do_install_webmin() {
 }
 
 do_install_SSH_server() {
-  
+  apt-get update
+  apt-get install openssh-server -y
   sed -i 's|PermitEmptyPasswords yes|PermitEmptyPasswords no|g' /etc/ssh/sshd_config
 }
 
 do_install_SSH_client() {
-  
+  apt-get update
+  apt-get install openssh-client -y
 }
 
 do_ssh() {
@@ -535,7 +532,7 @@ do_ssh() {
 
 do_clamav() {
   apt-get update
-  apt-get install clamav
+  apt-get install clamav -y
   mkdir -p /infected
   chmod -R nobody:nogroup /infected
   chown -R 000 /infected
@@ -545,7 +542,7 @@ do_clamav() {
 
 do_fail2ban() {
   apt-get update
-  apt-get install fail2ban
+  apt-get install fail2ban -y
 }
 
 do_nginx() {
@@ -788,10 +785,7 @@ while true; do
     "3 Update system & tool" "Updates and upgrades packages and get the latest version of this tool" \
     "4 Install packages" "ClamAV, Teamspeak, Webmin, NFS, SSH etc." \
     "5 Atomic-Toolkit" "Use the tool to install Sonarr, Couchpotato, Sabnzbd etc."\
-    "6 " \
-    "7 " \
-    "8 " \
-    "9 About Multi Installer" "Information about this tool" \
+    "6 About Multi Installer" "Information about this tool" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -803,10 +797,7 @@ while true; do
       3\ *) do_update_full ;;
       4\ *) do_install_menu ;;
       5\ *) do_atomic ;;
-      6\ *)  ;;
-      7\ *)  ;;
-      8\ *)  ;;
-      9\ *) do_about ;;
+      6\ *) do_about ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   else
