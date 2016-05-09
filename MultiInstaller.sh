@@ -437,7 +437,7 @@ do_finish() {
 #########################################Install menu########################################################
 
 do_install_menu() {
-  FUN=$(whiptail --title "Raspberry Pi Software Configuration Tool (raspi-config)" --menu "Advanced Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
+  FUN=$(whiptail --title "Installation menu" --menu "Package list" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
     "A1 Install Plex" "Media server, Public release no plexpass. Auto updates are set." \
     "A2 Install Webmin" "Graphical interface to manage headless systems" \
     "A3 Install SSH Server" "Needed by a remote machine to be accessable via SSH" \
