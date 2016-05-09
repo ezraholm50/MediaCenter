@@ -2,18 +2,19 @@
 # Part of raspi-config http://github.com/asb/raspi-config
 #
 # See LICENSE file for copyright and license details
-IFCONFIG="ifconfig"
+IFCONFIG=$(ifconfig)
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
 INTERFACES="/etc/network/interfaces"
 ADDRESS=$($IP route get 1 | awk '{print $NF;exit}')
-NETMASK=$($IFCONFIG $IFACE | grep Mask | sed s/^.*Mask://)
+NETMASK=$(ifconfig $IFACE | grep Mask | sed s/^.*Mask://)
 GATEWAY=$($IP route | awk '/default/ { print $3 }')
 SCRIPTS="/var/scripts"
-REPO="https://github.com/ezraholm50/MediaCenter"
+REPO="https://github.com/ezraholm50/MultiInstaller/raw/master"
 COUNTRY="nl" # use your own 2 letter country code for best speeds of the ubuntu/other repo's in sources.list
 INTERACTIVE=True
 ASK_TO_REBOOT=0
+WHOAMI=$(whoami)
 mkdir -p $SCRIPTS
 
 # Check if root
@@ -49,23 +50,23 @@ config value's to your needs. Please post requests or suggestions here:
 https://github.com/ezraholm50/MediaCenter/issues/1
 Please visit https://www.techandme.se for awsome free virtual machines,
 ownCloud, Teamspeak, Wordpress etc.\
-" 20 70 1
+" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 
 #########################################tools########################################################
 
 do_tools() {
-  FUN=$(whiptail --title "Firewall" --menu "UFW Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
-    "A1 Show LAN IP, Gateway, Netmask, MAC address etc" "" \
-    "A2 Show WAN IP" "Show your external IP address" \
+  FUN=$(whiptail --title "Firewall" --menu "UFW Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT \
+    "A1 Show LAN IP, Gateway, Netmask" "Ifconfig" \
+    "A2 Show WAN IP" "External IP address" \
     "A3 Change Hostname" "Change your network name" \
     "A4 Internationalisation Options" "Change language, time, date and keyboard layout" \
     "A5 Do distribution upgrade" "Tested on ubuntu, debian might work" \
-    "A6 Change current users password" \
-    "A7 Set swappiness to 1" "Avoid swapping when there's much RAM left"\
-    "A8 Set DNS" "We will use Comodo secure DNS"\
-    "A9 Change Repo's" "under construction"\
-    "A10 Set static IP" "Also please change it in your router"
+    "A6 Change current users password" "Current user = $WHOAMI" \
+    "A7 Set swappiness to 1" "Avoid swapping when there's much RAM left" \
+    "A8 Set DNS" "We will use Comodo secure DNS" \
+    "A9 Change Repo's" "under construction" \
+    "A10 Set static IP" "Also please change it in your router" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -90,11 +91,17 @@ do_tools() {
 ######Tools variable's#######
 
 do_ifconfig() {
-sudo ifconfig
+whiptail --msgbox "\
+Interface:$IFACE
+LAN IP: $ADDRESS
+Netmask: $NETMASK
+Gateway: $GATEWAY\
+" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 
 do_wan_ip() {
-sudo curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//' 
+  WAN=$(wget -qO- http://ipecho.net/plain ; echo)
+  whiptail --msgbox "WAN IP: $WAN" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 
 do_change_pass() {
@@ -400,15 +407,15 @@ sudo ufw deny 30033
 #########################################Upgrade and update system and tool########################################################
 
 do_update_full() {
-  apt-get autoclean
-  apt-get autoremove
+  apt-get autoclean -y
+  apt-get autoremove -y
   apt-get update
   apt-get upgrade -y
-  apt-get -f install
+  apt-get -f install -y
   dpkg --configure --pending
-  rm $SCRIPTS/tool.sh  
+  rm $SCRIPTS/MultiInstaller.sh  
   mkdir -p $SCRIPTS 
-  wget https://github.com/ezraholm50/MultiInstaller/tool.sh -P $SCRIPTS/
+  wget $REPO/MultiInstaller.sh -P $SCRIPTS/
   printf "Sleeping 5 seconds before reloading the Multi Installer\n"
   sleep 5
   bash $SCRIPTS/tool.sh
