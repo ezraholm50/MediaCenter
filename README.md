@@ -7,8 +7,9 @@
 # How to:
 
 * ```sudo mkdir -p /var/scripts```
-* ```sudo wget https://github.com/ezraholm50/MultiInstaller/raw/master/MultiInstaller.sh```
+* ```sudo wget https://github.com/ezraholm50/MultiInstaller/raw/master/MultiInstaller.sh -P /var/scripts/```
 * ```sudo bash /var/scripts/MultiInstaller.sh```
+* Every time you want to use the installer run the last command of the 3 listed above.
 
 # This script can:
 * Install Rsync, Webmin, SSH
