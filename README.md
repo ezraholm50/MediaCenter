@@ -1,5 +1,6 @@
 # MediaCenter
 
+* Useful graphical tool to install various things and set config values from within the CLI/Terminal
 * Tested on Ubuntu Core 16.04, server should work and desktop aswell. (Possibly works on lower versions aswell)
 * Might work on other debian distro's aswell.
 
