@@ -419,7 +419,7 @@ do_update_full() {
   wget $REPO/MultiInstaller.sh -P $SCRIPTS/
   printf "Sleeping 5 seconds before reloading the Multi Installer\n"
   sleep 5
-  bash $SCRIPTS/tool.sh
+  bash $SCRIPTS/MultiInstaller.sh
 }
 
 #########################################Finish and reboot?########################################################
