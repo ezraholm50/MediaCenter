@@ -76,6 +76,7 @@ do_tools() {
     "T14 Boot to terminal by default" "Only if you use a GUI/desktop now" \
     "T15 Boot to GUI/desktop by default" "Only if you have a GUI installed" \
     "T16 Show System info" "Package Landscape-common needs to be installed" \
+    "T17 Add progress bar" "To apt / apt-get update/install/upgrade" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -98,6 +99,7 @@ do_tools() {
       T14\ *) do_boot_text ;;
       T15\ *) do_boot_gui ;;
       T16\ *) do_landscape ;;
+      T17\ *) do_fancy ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
@@ -120,6 +122,11 @@ $RELEASE
 $FSCK
 $REBOOT\
 " 40 80
+}
+
+do_fancy() {
+	echo "Dpkg::Progress-Fancy "1";" > /etc/apt/apt.conf.d/99progressbar
+	whiptail --msgbox "You now have a fancy progress bar in green, outside this installer run apt or apt-get install <package>" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 
 do_boot_text() {
@@ -177,9 +184,9 @@ do_wan_ip() {
 }
 
 do_change_pass() {
-  whiptail --msgbox "You will now be asked to enter a new password for the ubuntu user" 20 60 1
-  passwd ubuntu &&
-  whiptail --msgbox "Password changed successfully" 20 60 1
+	USERPASS=$(whiptail --title "User to change pass for? (case sensetive)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
+  	passwd $USERPASS &&
+  	whiptail --msgbox "Password changed successfully" 20 60 1
 }
 
 do_internationalisation_menu() {
