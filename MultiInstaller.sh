@@ -453,7 +453,6 @@ do_install_menu() {
     "A12 Install DDClient" "Update Dynamic Dns with WAN IP, dyndns.com, easydns.com etc." \
     "A13 Install Letsencrypt" "Install free valid SSL certificates with your domain name" \
     "A14 Install Rsync" "Install a sync package to backup/copy filesystems/folders/files" \
-    "A15 Get the latest packages for your system" "Update & upgrade system" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -474,7 +473,6 @@ do_install_menu() {
       A12\ *) do_install_ddclient ;;
       A13\ *) do_install_letsencrypt ;;
       A14\ *) do_install_rsync ;;
-      A15\ *) do_update ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
