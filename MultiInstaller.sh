@@ -621,9 +621,7 @@ do_install_nfs_client() {
   apt-get update
   apt-get install nfs-common -y
   ufw allow 2049 
-  whiptail --msgbox "\
-mount your share like this: mount -t nfs -o proto=tcp,port=2049 <nfs-server-IP>:/ /mount_point
-auto mount like this: echo "<nfs-server-IP>:/   /mount_point   nfs    auto  0  0" >> /etc/fstab\
+  whiptail --msgbox "auto mount like this: echo "<nfs-server-IP>:/   /mount_point   nfs    auto  0  0" >> /etc/fstab
 " 20 70 1
 }
 
@@ -631,9 +629,7 @@ do_install_nfs_server() {
   apt-get update
   apt-get install nfs-kernel-server -y
   ufw allow 2049
-  whiptail --msgbox "\
-You can broadcast your NFS server and set it up in webmin: https://$ADDRESS:10000\
-" 20 70 1
+  whiptail --msgbox "You can broadcast your NFS server and set it up in webmin: https://$ADDRESS:10000" 20 60 1
 }
 
 do_install_ddclient() {
