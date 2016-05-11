@@ -57,34 +57,34 @@ ownCloud, Teamspeak, Wordpress etc.\
 
 do_tools() {
   FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "System tools" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT \
-    "1 Show LAN IP, Gateway, Netmask" "Ifconfig" \
-    "2 Show WAN IP" "External IP address" \
-    "3 Change Hostname" "Change your network name" \
-    "4 Internationalisation Options" "Change language, time, date and keyboard layout" \
-    "5 Do distribution upgrade" "Tested on ubuntu, debian might work" \
-    "6 Change current users password" "Current user = $WHOAMI" \
-    "7 Set swappiness to 1" "Avoid swapping when there's much RAM left" \
-    "8 Set DNS" "We will use Comodo secure DNS" \
-    "9 Change Repo's" "under construction" \
-    "10 Set static IP" "Also please change it in your router" \
-    "11 Blkid" "Show connected devices"
+    "T1 Show LAN IP, Gateway, Netmask" "Ifconfig" \
+    "T2 Show WAN IP" "External IP address" \
+    "T3 Change Hostname" "Change your network name" \
+    "T4 Internationalisation Options" "Change language, time, date and keyboard layout" \
+    "T5 Do distribution upgrade" "Tested on ubuntu, debian might work" \
+    "T6 Change current users password" "Current user = $WHOAMI" \
+    "T7 Set swappiness to 1" "Avoid swapping when there's much RAM left" \
+    "T8 Set DNS" "We will use Comodo secure DNS" \
+    "T9 Change Repo's" "under construction" \
+    "T10 Set static IP" "Also please change it in your router" \
+    "T11 Blkid" "Show connected devices"
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
     return 0
   elif [ $RET -eq 0 ]; then
     case "$FUN" in
-      1\ *) do_ifconfig ;;
-      2\ *) do_wan_ip ;;
-      3\ *) do_change_hostname ;;
-      4\ *) do_internationalisation_menu ;;
-      5\ *) do_dist_upgrade ;;
-      6\ *) do_change_pass ;;
-      7\ *) do_swappiness;;
-      8\ *) do_comodo_dns ;;
-      9\ *) do_country_repo ;;
-      10\ *) do_static_ip ;;
-      11\ *) do_blkid ;;
+      T1\ *) do_ifconfig ;;
+      T2\ *) do_wan_ip ;;
+      T3\ *) do_change_hostname ;;
+      T4\ *) do_internationalisation_menu ;;
+      T5\ *) do_dist_upgrade ;;
+      T6\ *) do_change_pass ;;
+      T7\ *) do_swappiness;;
+      T8\ *) do_comodo_dns ;;
+      T9\ *) do_country_repo ;;
+      T10\ *) do_static_ip ;;
+      T11\ *) do_blkid ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
@@ -465,6 +465,7 @@ do_install_menu() {
     "A12 Install DDClient" "Update Dynamic Dns with WAN IP, dyndns.com, easydns.com etc." \
     "A13 Install Letsencrypt" "Install free valid SSL certificates with your domain name" \
     "A14 Install Rsync" "Install a sync package to backup/copy filesystems/folders/files" \
+    "A15 Install Samba" "File sharing linux to windows"
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -485,6 +486,7 @@ do_install_menu() {
       A12\ *) do_install_ddclient ;;
       A13\ *) do_install_letsencrypt ;;
       A14\ *) do_install_rsync ;;
+      A15\ *) do_install_samba ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
@@ -507,12 +509,11 @@ do_install_samba() {
 	PASSWORD=$(whiptail --title "Samba user password" --passwordbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
  
 	exitstatus=$?
-if [ $exitstatus = 0 ]; then
-     smbpasswd -a  $USRS | $PASSWORD
-else
-    echo "You chose Cancel."
-fi
-
+	if [ $exitstatus = 0 ]; then
+     	smbpasswd -a  $USRS | $PASSWORD
+	else	
+    	echo "You chose Cancel."
+	fi
 }
 
 do_install_plex() {
