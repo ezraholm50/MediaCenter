@@ -510,10 +510,9 @@ do_install_samba() {
 	fi
 
 	PASSWORD=$(whiptail --title "Samba user password" --passwordbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
- 
-	exitstatus=$?
+ 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
-     	smbpasswd -a  $USRS | $PASSWORD
+     	$PASSWORD | smbpasswd -a  $USRS
 	else	
     	echo "You chose Cancel."
 	fi
