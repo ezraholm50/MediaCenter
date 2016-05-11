@@ -70,6 +70,7 @@ do_tools() {
     "T10 Set static IP" "DOES NOT WORK, BREAKS CONNECTION, WILL BE FIXED" \
     "T11 Blkid" "Show connected devices" \
     "T12 Df -h" "Show disk space" \
+    "T13 Connect to WLAN" "Wifi" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -88,12 +89,34 @@ do_tools() {
       T10\ *) do_static_ip ;;
       T11\ *) do_blkid ;;
       T12\ *) do_df ;;
+      T13\ *) do_wlan ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 
 ######Tools variable's#######
+
+do_wlan() {
+	
+	IWLIST=$(iwlist wlan0 scanning|grep -i 'essid')
+	if [ $exitstatus = 0 ]; then
+	apt-get update
+	apt-get install linux-firmware wpasupplicant -y
+	ifup wlan0
+	whiptail --msgbox "Next you will be shown a list with wireless access points, copy yours.." $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+	whiptail --msgbox "$IWLIST" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+	WLAN=$(whiptail --title "SSID, network name? (case sensetive)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
+	WLANPASS=$(whiptail --title "Wlan password? (case sensetive)" --passwordbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
+	iwconfig wlan0 essid $WLAN key s:$WLANPASS
+	ifdown wlan0
+	ifup wlan0
+	dhcpcd -r
+	dhcpcd wlan0
+	else
+    	echo "You chose Cancel."
+	fi
+}
 
 do_df() {
   DF=$(df -h)
