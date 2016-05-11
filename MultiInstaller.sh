@@ -67,7 +67,7 @@ do_tools() {
     "T7 Set swappiness to 1" "Avoid swapping when there's much RAM left" \
     "T8 Set DNS" "We will use Comodo secure DNS" \
     "T9 Change Repo's" "under construction" \
-    "T10 Set static IP" "Also please change it in your router" \
+    "T10 Set static IP" "DOES NOT WORK, BREAKS CONNECTION, WILL BE FIXED" \
     "T11 Blkid" "Show connected devices" \
     "T12 Df -h" "Show disk space" \
     3>&1 1>&2 2>&3)
