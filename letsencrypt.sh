@@ -1,7 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Tech and Me, 2016 - www.techandme.se
 #
+# See LICENSE file for copyright and license details
 # Letsencrypt
 function ask_yes_or_no() {
     read -p "$1 ([y]es or [N]o): "
