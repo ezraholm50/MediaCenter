@@ -90,6 +90,11 @@ do_tools() {
 
 ######Tools variable's#######
 
+do_blkid() {
+  BLKID=$(blkid)
+  whiptail --msgbox "$blkid" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+}
+
 do_ifconfig() {
 whiptail --msgbox "\
 Interface:$IFACE
