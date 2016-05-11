@@ -1,5 +1,6 @@
 #!/bin/sh
-# Part of raspi-config http://github.com/asb/raspi-config
+#
+# Tech and Me, 2016 - www.techandme.se
 #
 # See LICENSE file for copyright and license details
 IFCONFIG=$(ifconfig)
