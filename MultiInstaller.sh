@@ -92,9 +92,14 @@ do_tools() {
 
 ######Tools variable's#######
 
+do_df-h() {
+  DF=$(df -h)
+  whiptail --msgbox "$DF" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+}
+
 do_blkid() {
   BLKID=$(blkid)
-  whiptail --msgbox "$blkid" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+  whiptail --msgbox "$BLKID" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 
 do_ifconfig() {
@@ -483,6 +488,31 @@ do_install_menu() {
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
+}
+
+do_install_samba() {
+	apt-get update
+	apt-get install samba smbfs
+	sed -i 's|;  security = user|security = user|g' /etc/samba/smb.conf
+	echo "username map = /etc/samba/smbusers" > /etc/samba/smb.conf
+	USRS=$(whiptail --title "Samba username, create one please" --inputbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
+	USRU=$(whiptail --title "Ubuntu username? Should not be root!" --inputbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
+	exitstatus=$?
+	if [ $exitstatus = 0 ]; then
+    	echo "$USRU = '$USRS'" > /tmp/smbusers
+	else
+    	echo "You chose Cancel."
+	fi
+
+	PASSWORD=$(whiptail --title "Samba user password" --passwordbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
+ 
+	exitstatus=$?
+if [ $exitstatus = 0 ]; then
+     smbpasswd -a  $USRS | $PASSWORD
+else
+    echo "You chose Cancel."
+fi
+
 }
 
 do_install_plex() {
