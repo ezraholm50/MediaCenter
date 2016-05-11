@@ -67,7 +67,8 @@ do_tools() {
     "T8 Set DNS" "We will use Comodo secure DNS" \
     "T9 Change Repo's" "under construction" \
     "T10 Set static IP" "Also please change it in your router" \
-    "T11 Blkid" "Show connected devices"
+    "T11 Blkid" "Show connected devices" \
+    "T12 Df -h" "Show disk space" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -85,6 +86,7 @@ do_tools() {
       T9\ *) do_country_repo ;;
       T10\ *) do_static_ip ;;
       T11\ *) do_blkid ;;
+      T12\ *) do_df ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
@@ -92,7 +94,7 @@ do_tools() {
 
 ######Tools variable's#######
 
-do_df-h() {
+do_df() {
   DF=$(df -h)
   whiptail --msgbox "$DF" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
@@ -465,7 +467,7 @@ do_install_menu() {
     "A12 Install DDClient" "Update Dynamic Dns with WAN IP, dyndns.com, easydns.com etc." \
     "A13 Install Letsencrypt" "Install free valid SSL certificates with your domain name" \
     "A14 Install Rsync" "Install a sync package to backup/copy filesystems/folders/files" \
-    "A15 Install Samba" "File sharing linux to windows"
+    "A15 Install Samba" "File sharing linux to windows" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
