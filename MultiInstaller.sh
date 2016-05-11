@@ -745,7 +745,7 @@ fi
 
 do_install_rsync() {
   sudo apt-get update
-  sudo apt-get rsync
+  sudo apt-get install rsync -y
 }
 
 do_update() {
