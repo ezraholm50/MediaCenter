@@ -106,7 +106,19 @@ do_tools() {
 
 do_landscape() {
 	SYSINFO=$($DIR/50-landscape-sysinfo)
-	whiptail --msgbox "$SYSINFO" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+	HEADER=$($DIR/00-header)
+	UPDATES=$($DIR/90-updates-available)
+	RELEASE=$($DIR/91-release-upgrade)
+	FSCK=$($DIR/98-fsck-at-reboot)
+	REBOOT=$($DIR/98-reboot-required)
+	whiptail --msgbox "\
+$HEADER
+$SYSINFO
+$UPDATES
+$RELEASE
+$FSCK
+$REBOOT\
+" 40 80
 }
 
 do_boot_text() {
