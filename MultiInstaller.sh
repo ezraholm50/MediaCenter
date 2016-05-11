@@ -56,7 +56,7 @@ ownCloud, Teamspeak, Wordpress etc.\
 #########################################tools########################################################
 
 do_tools() {
-  FUN=$(whiptail --title "Firewall" --menu "UFW Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT \
+  FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "System tools" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT \
     "1 Show LAN IP, Gateway, Netmask" "Ifconfig" \
     "2 Show WAN IP" "External IP address" \
     "3 Change Hostname" "Change your network name" \
@@ -118,7 +118,7 @@ do_change_pass() {
 }
 
 do_internationalisation_menu() {
-  FUN=$(whiptail --title "Configuration Tool" --menu "Internationalisation Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
+  FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "Internationalisation Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
     "I1 Change Locale" "Set up language and regional settings to match your location" \
     "I2 Change Timezone" "Set up timezone to match your location" \
     "I3 Change Keyboard Layout" "Set the keyboard layout to match your keyboard" \
@@ -251,7 +251,7 @@ clear
 #########################################Firewall########################################################
 
 do_firewall() {
-  FUN=$(whiptail --title "Firewall" --menu "UFW Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
+  FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "Firewall options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
     "A1 Enable Firewall" "" \
     "A2 Disable Firewall" "" \
     "A3 Allow port Multiple" "Teamspeak" \
@@ -445,7 +445,7 @@ do_finish() {
 #########################################Install menu########################################################
 
 do_install_menu() {
-  FUN=$(whiptail --title "Installation menu" --menu "Package list" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
+  FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "Package list" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
     "A1 Install Plex" "Media server, Public release no plexpass. Auto updates are set." \
     "A2 Install Webmin" "Graphical interface to manage headless systems" \
     "A3 Install SSH Server" "Needed by a remote machine to be accessable via SSH" \
