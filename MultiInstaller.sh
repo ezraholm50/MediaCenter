@@ -71,6 +71,8 @@ do_tools() {
     "T11 Blkid" "Show connected devices" \
     "T12 Df -h" "Show disk space" \
     "T13 Connect to WLAN" "Wifi" \
+    "T14 Boot to terminal by default" "Only if you use a GUI/desktop now" \
+    "T15 Boot to GUI/desktop by default" "Only if you have a GUI installed" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -90,12 +92,24 @@ do_tools() {
       T11\ *) do_blkid ;;
       T12\ *) do_df ;;
       T13\ *) do_wlan ;;
+      T14\ *) do_boot_text ;;
+      T15\ *) do_boot_gui ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 
 ######Tools variable's#######
+
+do_boot_text() {
+	sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT=""|GRUB_CMDLINE_LINUX_DEFAULT="text"|g' /etc/default/grub
+	update-grub
+}
+
+do_boot_gui() {
+	sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="text"|GRUB_CMDLINE_LINUX_DEFAULT=""|g' /etc/default/grub
+	update-grub	
+}
 
 do_wlan() {
 	IWLIST=$(iwlist wlan0 scanning|grep -i 'essid')
@@ -845,7 +859,7 @@ calc_wt_size
 while true; do
   FUN=$(whiptail --title "https://www.techandme.se" --menu "Multi Installer" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Finish --ok-button Select \
     "1 System tools" "Show LAN, WAN ip, change hostname and more" \
-    "2 Firewall options" "Choose whether to boot into a desktop environment, Scratch, or the command-line" \
+    "2 Firewall options" "Enable/disable firewall and allow or deny certain ports" \
     "3 Update system & tool" "Updates and upgrades packages and get the latest version of this tool" \
     "4 Install packages" "ClamAV, Teamspeak, Webmin, NFS, SSH etc." \
     "5 Atomic-Toolkit" "Use the tool to install Sonarr, Couchpotato, Sabnzbd etc."\
