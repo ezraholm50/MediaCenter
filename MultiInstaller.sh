@@ -13,6 +13,7 @@ SCRIPTS="/var/scripts"
 REPO="https://github.com/ezraholm50/MultiInstaller/raw/master"
 COUNTRY="nl" # use your own 2 letter country code for best speeds of the ubuntu/other repo's in sources.list
 INTERACTIVE=True
+DIR='/etc/update-motd.d'
 ASK_TO_REBOOT=0
 WHOAMI=$(whoami)
 mkdir -p $SCRIPTS
@@ -73,6 +74,7 @@ do_tools() {
     "T13 Connect to WLAN" "Wifi" \
     "T14 Boot to terminal by default" "Only if you use a GUI/desktop now" \
     "T15 Boot to GUI/desktop by default" "Only if you have a GUI installed" \
+    "T16 Show System info" "Package Landscape-common needs to be installed" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -94,12 +96,18 @@ do_tools() {
       T13\ *) do_wlan ;;
       T14\ *) do_boot_text ;;
       T15\ *) do_boot_gui ;;
+      T16\ *) do_landscape ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 
 ######Tools variable's#######
+
+do_landscape() {
+	SYSINFO=$($DIR/50-landscape-sysinfo)
+	whiptail --msgbox "$SYSINFO" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+}
 
 do_boot_text() {
 	sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT=""|GRUB_CMDLINE_LINUX_DEFAULT="text"|g' /etc/default/grub
