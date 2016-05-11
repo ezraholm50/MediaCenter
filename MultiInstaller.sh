@@ -57,32 +57,34 @@ ownCloud, Teamspeak, Wordpress etc.\
 
 do_tools() {
   FUN=$(whiptail --title "Firewall" --menu "UFW Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT \
-    "A1 Show LAN IP, Gateway, Netmask" "Ifconfig" \
-    "A2 Show WAN IP" "External IP address" \
-    "A3 Change Hostname" "Change your network name" \
-    "A4 Internationalisation Options" "Change language, time, date and keyboard layout" \
-    "A5 Do distribution upgrade" "Tested on ubuntu, debian might work" \
-    "A6 Change current users password" "Current user = $WHOAMI" \
-    "A7 Set swappiness to 1" "Avoid swapping when there's much RAM left" \
-    "A8 Set DNS" "We will use Comodo secure DNS" \
-    "A9 Change Repo's" "under construction" \
-    "A10 Set static IP" "Also please change it in your router" \
+    "1 Show LAN IP, Gateway, Netmask" "Ifconfig" \
+    "2 Show WAN IP" "External IP address" \
+    "3 Change Hostname" "Change your network name" \
+    "4 Internationalisation Options" "Change language, time, date and keyboard layout" \
+    "5 Do distribution upgrade" "Tested on ubuntu, debian might work" \
+    "6 Change current users password" "Current user = $WHOAMI" \
+    "7 Set swappiness to 1" "Avoid swapping when there's much RAM left" \
+    "8 Set DNS" "We will use Comodo secure DNS" \
+    "9 Change Repo's" "under construction" \
+    "10 Set static IP" "Also please change it in your router" \
+    "11 Blkid" "Show connected devices"
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
     return 0
   elif [ $RET -eq 0 ]; then
     case "$FUN" in
-      A1\ *) do_ifconfig ;;
-      A2\ *) do_wan_ip ;;
-      A3\ *) do_change_hostname ;;
-      A4\ *) do_internationalisation_menu ;;
-      A5\ *) do_dist_upgrade ;;
-      A6\ *) do_change_pass ;;
-      A7\ *) do_swappiness;;
-      A8\ *) do_comodo_dns ;;
-      A9\ *) do_country_repo ;;
-      A10\ *) do_static_ip ;;
+      1\ *) do_ifconfig ;;
+      2\ *) do_wan_ip ;;
+      3\ *) do_change_hostname ;;
+      4\ *) do_internationalisation_menu ;;
+      5\ *) do_dist_upgrade ;;
+      6\ *) do_change_pass ;;
+      7\ *) do_swappiness;;
+      8\ *) do_comodo_dns ;;
+      9\ *) do_country_repo ;;
+      10\ *) do_static_ip ;;
+      11\ *) do_blkid ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
