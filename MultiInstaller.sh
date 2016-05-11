@@ -525,6 +525,9 @@ do_install_menu() {
     "A13 Install Letsencrypt" "Install free valid SSL certificates with your domain name" \
     "A14 Install Rsync" "Install a sync package to backup/copy filesystems/folders/files" \
     "A15 Install Samba" "Under construction" \
+    "A16 Install Landscape-common" "System monitoring" \
+    "A17 Install Htop" "Graphical tool to see current mem usage/cpu etc." \
+    "A18 Install Network manager" "Advanced network tools"
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -546,14 +549,32 @@ do_install_menu() {
       A13\ *) do_install_letsencrypt ;;
       A14\ *) do_install_rsync ;;
       A15\ *) do_install_samba ;;
+      A16\ *) do_install_landscape ;;
+      A17\ *) do_install_htop ;;
+      A18\ *) do_install_networkmanager ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 
+do_install_networkmanager() {
+	apt-get update
+	apt-get install network-manager -y
+}
+
+do_install_landscape() {
+	apt-get update
+	apt-get install landscape-common -y
+}
+
+do_install_htop() {
+	apt-get update
+	apt-get install htop -y
+}
+
 do_install_samba() {
 	apt-get update
-	apt-get install samba smbfs
+	apt-get install samba smbfs -y
 	sed -i 's|;  security = user|security = user|g' /etc/samba/smb.conf
 	echo "username map = /etc/samba/smbusers" > /etc/samba/smb.conf
 	USRS=$(whiptail --title "Samba username, create one please" --inputbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
