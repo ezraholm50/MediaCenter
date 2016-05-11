@@ -443,15 +443,15 @@ do_install_menu() {
     "A2 Install Webmin" "Graphical interface to manage headless systems" \
     "A3 Install SSH Server" "Needed by a remote machine to be accessable via SSH" \
     "A4 Install SSH Client" "Needed by the local machine to connect to a remote machine" \
-    "A5 Change SSH-server port" "Change SSH-server port to 8822 and open it in UFW and deny the old 22" \
-    "A6 Install ClamAV" "Install Antivirus software and set daily scans, infected will be moved to /infected" \
-    "A7 Install Fail2Ban" "Install a failed login monitor, needs jails so it won't work out of the box" \
+    "A5 Change SSH-server port" "Change SSH-server port to 8822" \
+    "A6 Install ClamAV" "Antivirus, set daily scans, infected will be moved to /infected" \
+    "A7 Install Fail2Ban" "Install a failed login monitor, needs jails for apps!!!!" \
     "A8 Install Nginx" "Install Nginx webserver" \
     "A9 Install Teamspeak" "Install Teamspeak 3 server to do voice chat" \
     "A10 Install NFS Client" "Install NFS client to be able to mount NFS shares" \
     "A11 Install NFS Server" "Install NFS server to be able to broadcast NFS shares" \
-    "A12 Install DDClient" "Update your Dynamic Dns with your current WAN IP, supports dyndns.com, easydns.com etc." \
-    "A13 Install Letsencrypt" "Install free valid SSL certificates with your domain name (www.yourdomain.com)" \
+    "A12 Install DDClient" "Update Dynamic Dns with WAN IP, dyndns.com, easydns.com etc." \
+    "A13 Install Letsencrypt" "Install free valid SSL certificates with your domain name" \
     "A14 Install Rsync" "Install a sync package to backup/copy filesystems/folders/files" \
     "A15 Get the latest packages for your system" "Update & upgrade system" \
     3>&1 1>&2 2>&3)
@@ -621,15 +621,14 @@ do_install_nfs_client() {
   apt-get update
   apt-get install nfs-common -y
   ufw allow 2049 
-  whiptail --msgbox "auto mount like this: echo "<nfs-server-IP>:/   /mount_point   nfs    auto  0  0" >> /etc/fstab
-" 20 70 1
+  whiptail --msgbox 'auto mount like this: echo "<nfs-server-IP>:/   /mount_point   nfs    auto  0  0" >> /etc/fstab' $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 
 do_install_nfs_server() {
   apt-get update
   apt-get install nfs-kernel-server -y
   ufw allow 2049
-  whiptail --msgbox "You can broadcast your NFS server and set it up in webmin: https://$ADDRESS:10000" 20 60 1
+  whiptail --msgbox "You can broadcast your NFS server and set it up in webmin: https://$ADDRESS:10000" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 
 do_install_ddclient() {
