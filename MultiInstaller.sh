@@ -98,16 +98,15 @@ do_tools() {
 ######Tools variable's#######
 
 do_wlan() {
-	
 	IWLIST=$(iwlist wlan0 scanning|grep -i 'essid')
-	if [ $exitstatus = 0 ]; then
-	apt-get update
-	apt-get install linux-firmware wpasupplicant -y
-	ifup wlan0
 	whiptail --msgbox "Next you will be shown a list with wireless access points, copy yours.." $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 	whiptail --msgbox "$IWLIST" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 	WLAN=$(whiptail --title "SSID, network name? (case sensetive)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
 	WLANPASS=$(whiptail --title "Wlan password? (case sensetive)" --passwordbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
+	if [ $exitstatus = 0 ]; then
+	apt-get update
+	apt-get install linux-firmware wpasupplicant -y
+	ifup wlan0
 	iwconfig wlan0 essid $WLAN key s:$WLANPASS
 	ifdown wlan0
 	ifup wlan0
