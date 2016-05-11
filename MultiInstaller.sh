@@ -468,7 +468,7 @@ do_install_menu() {
     "A12 Install DDClient" "Update Dynamic Dns with WAN IP, dyndns.com, easydns.com etc." \
     "A13 Install Letsencrypt" "Install free valid SSL certificates with your domain name" \
     "A14 Install Rsync" "Install a sync package to backup/copy filesystems/folders/files" \
-    "A15 Install Samba" "File sharing linux to windows" \
+    "A15 Install Samba" "Under construction" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -512,7 +512,8 @@ do_install_samba() {
 	PASSWORD=$(whiptail --title "Samba user password" --passwordbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
  	exitstatus=$?
 	if [ $exitstatus = 0 ]; then
-     	$PASSWORD | smbpasswd -a  $USRS
+     	smbpasswd -a  $USRS
+	$PASSWORD
 	else	
     	echo "You chose Cancel."
 	fi
