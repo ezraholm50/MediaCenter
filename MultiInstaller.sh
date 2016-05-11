@@ -783,7 +783,7 @@ do_atomic() {
 calc_wt_size
 while true; do
   FUN=$(whiptail --title "https://www.techandme.se" --menu "Multi Installer" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Finish --ok-button Select \
-    "1 System tools" "" \
+    "1 System tools" "Show LAN, WAN ip, change hostname and more" \
     "2 Firewall options" "Choose whether to boot into a desktop environment, Scratch, or the command-line" \
     "3 Update system & tool" "Updates and upgrades packages and get the latest version of this tool" \
     "4 Install packages" "ClamAV, Teamspeak, Webmin, NFS, SSH etc." \
