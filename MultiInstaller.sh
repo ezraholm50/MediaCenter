@@ -20,6 +20,7 @@ mkdir -p $SCRIPTS
 # Check if root
 if [ "$(whoami)" != "root" ]; then
         whiptail --msgbox "Sorry you are not root. You must type: sudo bash /var/scripts/MultiInstaller.sh" 20 60 1
+        exit
 fi
 
 #########################################Screen size########################################################
