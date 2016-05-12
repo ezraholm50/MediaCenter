@@ -535,8 +535,8 @@ do_install_menu() {
     "I15 Install Samba" "Under construction" \
     "I16 Install Landscape-common" "System monitoring" \
     "I17 Install Htop" "Graphical tool to see current mem usage/cpu etc." \
-    "I18 Install Network manager" "Advanced network tools"
-    "I19 Install ownCloud" "Your own Dropbox/google drive"
+    "I18 Install Network manager" "Advanced network tools" \
+    "I19 Install ownCloud" "Your own Dropbox/google drive" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
