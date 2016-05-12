@@ -162,7 +162,7 @@ do_wlan() {
 
 do_df() {
   DF=$(df -h)
-  whiptail --msgbox "$DF" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+  whiptail --msgbox "$DF" 20 $WT_WIDTH $WT_MENU_HEIGHT
 }
 
 do_blkid() {
