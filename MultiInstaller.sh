@@ -18,6 +18,7 @@ DIR='/etc/update-motd.d'
 ASK_TO_REBOOT=0
 WHOAMI=$(whoami)
 mkdir -p $SCRIPTS
+apt-get update
 
 # Check if root
 if [ "$(whoami)" != "root" ]; then
