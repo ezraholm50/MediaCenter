@@ -518,51 +518,63 @@ do_finish() {
 
 do_install_menu() {
   FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "Package list" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
-    "A1 Install Plex" "Media server, Public release no plexpass. Auto updates are set." \
-    "A2 Install Webmin" "Graphical interface to manage headless systems" \
-    "A3 Install SSH Server" "Needed by a remote machine to be accessable via SSH" \
-    "A4 Install SSH Client" "Needed by the local machine to connect to a remote machine" \
-    "A5 Change SSH-server port" "Change SSH-server port to 8822" \
-    "A6 Install ClamAV" "Antivirus, set daily scans, infected will be moved to /infected" \
-    "A7 Install Fail2Ban" "Install a failed login monitor, needs jails for apps!!!!" \
-    "A8 Install Nginx" "Install Nginx webserver" \
-    "A9 Install Teamspeak" "Install Teamspeak 3 server to do voice chat" \
-    "A10 Install NFS Client" "Install NFS client to be able to mount NFS shares" \
-    "A11 Install NFS Server" "Install NFS server to be able to broadcast NFS shares" \
-    "A12 Install DDClient" "Update Dynamic Dns with WAN IP, dyndns.com, easydns.com etc." \
-    "A13 Install Letsencrypt" "Install free valid SSL certificates with your domain name" \
-    "A14 Install Rsync" "Install a sync package to backup/copy filesystems/folders/files" \
-    "A15 Install Samba" "Under construction" \
-    "A16 Install Landscape-common" "System monitoring" \
-    "A17 Install Htop" "Graphical tool to see current mem usage/cpu etc." \
-    "A18 Install Network manager" "Advanced network tools"
+    "I1 Install Plex" "Media server, Public release no plexpass. Auto updates are set." \
+    "I2 Install Webmin" "Graphical interface to manage headless systems" \
+    "I3 Install SSH Server" "Needed by a remote machine to be accessable via SSH" \
+    "I4 Install SSH Client" "Needed by the local machine to connect to a remote machine" \
+    "I5 Change SSH-server port" "Change SSH-server port to 8822" \
+    "I6 Install ClamAV" "Antivirus, set daily scans, infected will be moved to /infected" \
+    "I7 Install Fail2Ban" "Install a failed login monitor, needs jails for apps!!!!" \
+    "I8 Install Nginx" "Install Nginx webserver" \
+    "I9 Install Teamspeak" "Install Teamspeak 3 server to do voice chat" \
+    "I10 Install NFS Client" "Install NFS client to be able to mount NFS shares" \
+    "I11 Install NFS Server" "Install NFS server to be able to broadcast NFS shares" \
+    "I12 Install DDClient" "Update Dynamic Dns with WAN IP, dyndns.com, easydns.com etc." \
+    "I13 Install Letsencrypt" "Install free valid SSL certificates with your domain name" \
+    "I14 Install Rsync" "Install a sync package to backup/copy filesystems/folders/files" \
+    "I15 Install Samba" "Under construction" \
+    "I16 Install Landscape-common" "System monitoring" \
+    "I17 Install Htop" "Graphical tool to see current mem usage/cpu etc." \
+    "I18 Install Network manager" "Advanced network tools"
+    "I19 Install ownCloud" "Your own Dropbox/google drive"
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
     return 0
   elif [ $RET -eq 0 ]; then
     case "$FUN" in
-      A1\ *) do_install_plex ;;
-      A2\ *) do_install_webmin ;;
-      A3\ *) do_install_SSH_server ;;
-      A4\ *) do_install_SSH_client ;;
-      A5\ *) do_ssh ;;
-      A6\ *) do_clamav ;;
-      A7\ *) do_fail2ban ;;
-      A8\ *) do_nginx ;;
-      A9\ *) do_teamspeak ;;
-      A10\ *) do_install_nfs_client ;;
-      A11\ *) do_install_nfs_server ;;
-      A12\ *) do_install_ddclient ;;
-      A13\ *) do_install_letsencrypt ;;
-      A14\ *) do_install_rsync ;;
-      A15\ *) do_install_samba ;;
-      A16\ *) do_install_landscape ;;
-      A17\ *) do_install_htop ;;
-      A18\ *) do_install_networkmanager ;;
+      I1\ *) do_install_plex ;;
+      I2\ *) do_install_webmin ;;
+      I3\ *) do_install_SSH_server ;;
+      I4\ *) do_install_SSH_client ;;
+      I5\ *) do_ssh ;;
+      I6\ *) do_clamav ;;
+      I7\ *) do_fail2ban ;;
+      I8\ *) do_nginx ;;
+      I9\ *) do_teamspeak ;;
+      I10\ *) do_install_nfs_client ;;
+      I11\ *) do_install_nfs_server ;;
+      I12\ *) do_install_ddclient ;;
+      I13\ *) do_install_letsencrypt ;;
+      I14\ *) do_install_rsync ;;
+      I15\ *) do_install_samba ;;
+      I16\ *) do_install_landscape ;;
+      I17\ *) do_install_htop ;;
+      I18\ *) do_install_networkmanager ;;
+      I19\ *) do_install_owncloud ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
+}
+
+do_install_owncloud() {
+	rm /etc/rc.local
+	wget https://github.com/enoch85/ownCloud-VM/raw/master/beta/rc.local -P /etc/
+	chmod 755 /etc/rc.local
+	apt-get update
+	apt-get install libreoffice -y
+	whiptail --msgbox "We will now reboot and start the ownCloud installation" 20 60 1
+	reboot
 }
 
 do_install_networkmanager() {
