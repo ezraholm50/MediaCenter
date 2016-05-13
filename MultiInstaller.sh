@@ -18,7 +18,6 @@ DIR='/etc/update-motd.d'
 ASK_TO_REBOOT=0
 WHOAMI=$(whoami)
 mkdir -p $SCRIPTS
-apt-get update
 
 # Check if root
 if [ "$(whoami)" != "root" ]; then
@@ -26,6 +25,13 @@ if [ "$(whoami)" != "root" ]; then
         exit
 fi
 
+# Run apt-get update, saves time. Instead of for every install running apt-get update
+{
+    for ((i = 0 ; i <= 100 ; i+=20)); do
+        sleep 1
+        echo $i
+    done < <(apt-get update)
+} | whiptail --gauge "Please wait while running apt-get update" 6 60 0
 #########################################Screen size########################################################
 
 calc_wt_size() {
