@@ -124,7 +124,8 @@ do_tools() {
 #########################################tools menu########################################################
 do_listdir() {
 	LISTDIR=$(whiptail --title "Directory to list? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT 3>&1 1>&2 2>&3)
-	whiptail --msgbox "ls -la $LISTDIR" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+	LISTDIR1=$(ls -la $LISTDIR)
+	whiptail --msgbox "$LISTDIR1" 30 $WT_WIDTH $WT_MENU_HEIGHT
 	
 }
 ######Tools variable's#######
