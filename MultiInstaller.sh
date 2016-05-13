@@ -80,6 +80,8 @@ do_tools() {
     "T15 Boot to GUI/desktop by default" "Only if you have a GUI installed" \
     "T16 Show System info" "Package Landscape-common needs to be installed" \
     "T17 Add progress bar" "To apt / apt-get update/install/upgrade" \
+    "T18 Current users" "Show current users logged in" \
+    "T19 Backup with rsync" "Lets you choose dir/file and dest" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -103,11 +105,26 @@ do_tools() {
       T15\ *) do_boot_gui ;;
       T16\ *) do_landscape ;;
       T17\ *) do_fancy ;;
+      T18\ *) do_currentusers ;;
+      t19\ *) do_backup ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 #########################################tools menu########################################################
+do_backup() {
+	BACKUPDIR=$(whiptail --title "Backup directory? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT)
+	BACKUPDEST=$(whiptail --title "Backup destination? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT)
+	apt-get install rsync -y
+	rsync -aAXv $BACKUPDIR $BACKUPDEST
+}
+######Tools variable's#######
+do_currentusers()
+{
+   	USERLIST=$(userlist)
+   	apt-get install cfingerd -y
+   	whiptail --msgbox "$USERLIST" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+}
 ######Tools variable's#######
 do_landscape() {
 	SYSINFO=$($DIR/50-landscape-sysinfo)
@@ -537,6 +554,7 @@ do_install_menu() {
     "I17 Install Htop" "Graphical tool to see current mem usage/cpu etc." \
     "I18 Install Network manager" "Advanced network tools" \
     "I19 Install ownCloud" "Your own Dropbox/google drive" \
+    "I20 Install OpenVpn" "Connect to a VPN server" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -562,12 +580,15 @@ do_install_menu() {
       I17\ *) do_install_htop ;;
       I18\ *) do_install_networkmanager ;;
       I19\ *) do_install_owncloud ;;
+      I20\ *) do_install_openvpn ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 #########################################Install menu########################################################
-
+do_install_openvpn() {
+	apt-get install openvpn -y
+}
 ########Install variable's########
 do_install_owncloud() {
 	apt-get install libreoffice -y
