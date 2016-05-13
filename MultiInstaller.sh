@@ -3,6 +3,7 @@
 # Tech and Me, 2016 - www.techandme.se
 #
 # See LICENSE file for copyright and license details
+#########################################Var's########################################################
 IFCONFIG=$(ifconfig)
 IP="/sbin/ip"
 IFACE=$($IP -o link show | awk '{print $2,$9}' | grep "UP" | cut -d ":" -f 1)
@@ -18,13 +19,13 @@ DIR='/etc/update-motd.d'
 ASK_TO_REBOOT=0
 WHOAMI=$(whoami)
 mkdir -p $SCRIPTS
-
+#########################################Root check########################################################
 # Check if root
 if [ "$(whoami)" != "root" ]; then
         whiptail --msgbox "Sorry you are not root. You must type: sudo bash /var/scripts/MultiInstaller.sh" 20 60 1
         exit
 fi
-
+#########################################Update########################################################
 # Run apt-get update, saves time. Instead of for every install running apt-get update
 {
     for ((i = 0 ; i <= 100 ; i+=20)); do
@@ -33,7 +34,6 @@ fi
     done < <(apt-get update)
 } | whiptail --gauge "Please wait while running apt-get update" 6 60 0
 #########################################Screen size########################################################
-
 calc_wt_size() {
   # NOTE: it's tempting to redirect stderr to /dev/null, so supress error 
   # output from tput. However in this case, tput detects neither stdout or 
@@ -49,9 +49,7 @@ calc_wt_size() {
   fi
   WT_MENU_HEIGHT=$(($WT_HEIGHT-7))
 }
-
 #########################################About########################################################
-
 do_about() {
   whiptail --msgbox "\
 This tool is created by techandme.se for less skilled linux terminal users.
@@ -62,9 +60,7 @@ Please visit https://www.techandme.se for awsome free virtual machines,
 ownCloud, Teamspeak, Wordpress etc.\
 " $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
-
-#########################################tools########################################################
-
+#########################################tools menu########################################################
 do_tools() {
   FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "System tools" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT \
     "T1 Show LAN IP, Gateway, Netmask" "Ifconfig" \
@@ -111,9 +107,8 @@ do_tools() {
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
-
+#########################################tools menu########################################################
 ######Tools variable's#######
-
 do_landscape() {
 	SYSINFO=$($DIR/50-landscape-sysinfo)
 	HEADER=$($DIR/00-header)
@@ -130,22 +125,22 @@ $FSCK
 $REBOOT\
 " 40 80
 }
-
+######Tools variable's#######
 do_fancy() {
 	echo "Dpkg::Progress-Fancy "1";" > /etc/apt/apt.conf.d/99progressbar
 	whiptail --msgbox "You now have a fancy progress bar in green, outside this installer run apt or apt-get install <package>" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
-
+######Tools variable's#######
 do_boot_text() {
 	sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT=""|GRUB_CMDLINE_LINUX_DEFAULT="text"|g' /etc/default/grub
 	update-grub
 }
-
+######Tools variable's#######
 do_boot_gui() {
 	sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT="text"|GRUB_CMDLINE_LINUX_DEFAULT=""|g' /etc/default/grub
 	update-grub	
 }
-
+######Tools variable's#######
 do_wlan() {
 	IWLIST=$(iwlist wlan0 scanning|grep -i 'essid')
 	whiptail --msgbox "Next you will be shown a list with wireless access points, copy yours.." $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
@@ -165,17 +160,17 @@ do_wlan() {
     	echo "You chose Cancel."
 	fi
 }
-
+######Tools variable's#######
 do_df() {
   DF=$(df -h)
   whiptail --msgbox "$DF" 20 $WT_WIDTH $WT_MENU_HEIGHT
 }
-
+######Tools variable's#######
 do_blkid() {
   BLKID=$(blkid)
   whiptail --msgbox "$BLKID" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
-
+######Tools variable's#######
 do_ifconfig() {
 whiptail --msgbox "\
 Interface:$IFACE
@@ -184,18 +179,18 @@ Netmask: $NETMASK
 Gateway: $GATEWAY\
 " $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
-
+######Tools variable's#######
 do_wan_ip() {
   WAN=$(wget -qO- http://ipecho.net/plain ; echo)
   whiptail --msgbox "WAN IP: $WAN" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
-
+######Tools variable's#######
 do_change_pass() {
 	USERPASS=$(whiptail --title "User to change pass for? (case sensetive)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
   	passwd $USERPASS &&
   	whiptail --msgbox "Password changed successfully" 20 60 1
 }
-
+######Tools variable's#######
 do_internationalisation_menu() {
   FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "Internationalisation Options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
     "I1 Change Locale" "Set up language and regional settings to match your location" \
@@ -214,21 +209,21 @@ do_internationalisation_menu() {
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
-
+######Tools variable's#######
 do_configure_keyboard() {
   dpkg-reconfigure keyboard-configuration &&
   printf "Reloading keymap. This may take a short while\n" &&
   invoke-rc.d keyboard-setup start
 }
-
+######Tools variable's#######
 do_change_locale() {
   dpkg-reconfigure locales
 }
-
+######Tools variable's#######
 do_change_timezone() {
   dpkg-reconfigure tzdata
 }
-
+######Tools variable's#######
 do_change_hostname() {
   whiptail --msgbox "\
 Please note: RFCs mandate that a hostname's labels \
@@ -246,29 +241,29 @@ No other symbols, punctuation characters, or blank spaces are permitted.\
     ASK_TO_REBOOT=1
   fi
 }
-
+######Tools variable's#######
 do_dist_upgrade() {
   sudo apt-get update
   sudo do-release-upgrade -y
 }
-
+######Tools variable's#######
 do_swappiness() {
 sed -i 's|vm.swappiness = |#vm.swappiness = |g' /etc/sysctl.conf
 echo "vm.swappiness = 1" >> /etc/sysctl.conf
 sysctl vm.swappiness=1
 }
-
+######Tools variable's#######
 do_comodo_dns() {
 cat /dev/null > /etc/resolvconf/resolv.conf.d/base
 echo "nameserver 8.26.56.26" >> /etc/resolvconf/resolv.conf.d/base
 echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
 resolvconf -u
 }
-
+######Tools variable's#######
 do_country_repo() {
 sed -i "s|gb|$COUNTRY|g" /etc/apt/sources.list
 }
-
+######Tools variable's#######
 do_static_ip() {
 wget https://raw.githubusercontent.com/enoch85/ownCloud-VM/master/static/test_connection.sh -P $SCRIPTS
 echo -e "\e[0m"
@@ -326,9 +321,9 @@ bash /var/scripts/test_connection.sh
 sleep 2
 clear
 }
+######Tools variable's#######
 
-#########################################Firewall########################################################
-
+#########################################Firewall menu########################################################
 do_firewall() {
   FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "Firewall options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
     "A1 Enable Firewall" "" \
@@ -389,110 +384,111 @@ do_firewall() {
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
+#########################################Firewall menu########################################################
 
 ######Firewall variable's#######
 do_ufw_enable() {
 sudo ufw enable
 }
-
+######Firewall variable's#######
 do_ufw_disable() {
 sudo ufw disable
 }
-
+######Firewall variable's#######
 do_allow_32400() {
 sudo ufw allow 32400
 }
-
+######Firewall variable's#######
 do_allow_10000() {
 sudo ufw allow 10000
 }
-
+######Firewall variable's#######
 do_allow_5050() {
 sudo ufw allow 5050
 }
-
+######Firewall variable's#######
 do_allow_9090() {
 sudo ufw allow 9090
 }
-
+######Firewall variable's#######
 do_allow_8080() {
 sudo ufw allow 8080
 }
-
+######Firewall variable's#######
 do_allow_8989() {
 sudo ufw allow 8989
 }
-
+######Firewall variable's#######
 do_allow_8181() {
 sudo ufw allow 8181
 }
-
+######Firewall variable's#######
 do_allow_8085() {
 sudo ufw allow 8085
 }
-
+######Firewall variable's#######
 do_allow_mylar() {
 sudo ufw allow 8080
 }
-
+######Firewall variable's#######
 do_allow_2049() {
 sudo ufw allow 2049
 }
-
+######Firewall variable's#######
 do_allow_teamspeak() {
 sudo ufw allow 9987
 sudo ufw allow 10011
 sudo ufw allow 30033
 }
-
+######Firewall variable's#######
 do_deny_32400() {
 sudo ufw deny 32400
 }
-
+######Firewall variable's#######
 do_deny_10000() {
 sudo ufw deny 10000
 }
-
+######Firewall variable's#######
 do_deny_5050() {
 sudo ufw deny 5050
 }
-
+######Firewall variable's#######
 do_deny_9090() {
 sudo ufw deny 9090
 }
-
+######Firewall variable's#######
 do_deny_8080() {
 sudo ufw deny 8080
 }
-
+######Firewall variable's#######
 do_deny_8989() {
 sudo ufw deny 8989
 }
-
+######Firewall variable's#######
 do_deny_8181() {
 sudo ufw deny 8181
 }
-
+######Firewall variable's#######
 do_deny_8085() {
 sudo ufw deny 8085
 }
-
+######Firewall variable's#######
 do_deny_mylar() {
 sudo ufw deny 8080
 }
-
+######Firewall variable's#######
 do_deny_2049() {
 sudo ufw deny 2049
 }
-
+######Firewall variable's#######
 do_deny_teamspeak() {
 sudo ufw deny 9987
 sudo ufw deny 10011
 sudo ufw deny 30033
 }
+######Firewall variable's#######
 
 #########################################Upgrade and update system and tool########################################################
-
 do_update_full() {
   apt-get autoclean -y
   apt-get autoremove -y
@@ -507,9 +503,7 @@ do_update_full() {
   sleep 5
   bash $SCRIPTS/MultiInstaller.sh
 }
-
 #########################################Finish and reboot?########################################################
-
 do_finish() {
   if [ $ASK_TO_REBOOT -eq 1 ]; then
     whiptail --yesno "Would you like to reboot now?" 20 60 2
@@ -520,9 +514,7 @@ do_finish() {
   fi
   exit 0
 }
-
 #########################################Install menu########################################################
-
 do_install_menu() {
   FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "Package list" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
     "I1 Install Plex" "Media server, Public release no plexpass. Auto updates are set." \
@@ -573,32 +565,32 @@ do_install_menu() {
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
+#########################################Install menu########################################################
 
+########Install variable's########
 do_install_owncloud() {
-	rm /etc/rc.local
-	wget https://github.com/enoch85/ownCloud-VM/raw/master/beta/rc.local -P /etc/
-	chmod 755 /etc/rc.local
-	apt-get update
 	apt-get install libreoffice -y
-	whiptail --msgbox "We will now reboot and start the ownCloud installation" 20 60 1
+	wget https://github.com/enoch85/ownCloud-VM/raw/master/production/owncloud_install_production.sh -P /var/scripts/
+	bash /var/scripts/owncloud_install_production.sh
+	#whiptail --msgbox "We will now reboot and start the ownCloud installation" 20 60 1
 	reboot
 }
-
+########Install variable's########
 do_install_networkmanager() {
 	apt-get update
 	apt-get install network-manager -y
 }
-
+########Install variable's########
 do_install_landscape() {
 	apt-get update
 	apt-get install landscape-common -y
 }
-
+########Install variable's########
 do_install_htop() {
 	apt-get update
 	apt-get install htop -y
 }
-
+########Install variable's########
 do_install_samba() {
 	apt-get update
 	apt-get install samba smbfs -y
@@ -622,7 +614,7 @@ do_install_samba() {
     	echo "You chose Cancel."
 	fi
 }
-
+########Install variable's########
 do_install_plex() {
   apt-get install wget git -y
   wget https://downloads.plex.tv/plex-media-server/0.9.16.6.1993-5089475/plexmediaserver_0.9.16.6.1993-5089475_amd64.deb -P /tmp/
@@ -655,24 +647,24 @@ else
 	chmod 754 /etc/cron.daily/plex.sh
 fi
 }
-
+########Install variable's########
 do_install_webmin() {
   wget http://prdownloads.sourceforge.net/webadmin/webmin_1.791_all.deb -P /tmp/
   apt-get install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python -y
   dpkg --install /tmp/webmin_1.791_all.deb
 }
-
+########Install variable's########
 do_install_SSH_server() {
   apt-get update
   apt-get install openssh-server -y
   sed -i 's|PermitEmptyPasswords yes|PermitEmptyPasswords no|g' /etc/ssh/sshd_config
 }
-
+########Install variable's########
 do_install_SSH_client() {
   apt-get update
   apt-get install openssh-client -y
 }
-
+########Install variable's########
 do_ssh() {
   ufw allow 8822
   ufw deny 22
@@ -680,7 +672,7 @@ do_ssh() {
   echo
   echo "After the reboot you can use port 8822 for SSH"
 }
-
+########Install variable's########
 do_clamav() {
   apt-get update
   apt-get install clamav -y
@@ -690,19 +682,19 @@ do_clamav() {
   echo "freshclam && clamscan -r --move=/infected / && chown -R nodbody:nogroup /infected && chmod -R 000 /infected " >> /etc/cron.daily/clamscan.sh
   chmod 754 /etc/cron.daily/clamscan.sh
 }
-
+########Install variable's########
 do_fail2ban() {
   apt-get update
   apt-get install fail2ban -y
 }
-
+########Install variable's########
 do_nginx() {
   apt-get update
   apt-get install nginx -y
   ufw allow 443
   ufw allow 80
 }
-
+########Install variable's########
 do_teamspeak() {
 # Add user
 useradd teamspeak3
@@ -759,21 +751,21 @@ else
       echo
 fi
 }
-
+########Install variable's########
 do_install_nfs_client() {
   apt-get update
   apt-get install nfs-common -y
   ufw allow 2049 
   whiptail --msgbox 'auto mount like this: echo "<nfs-server-IP>:/   /mount_point   nfs    auto  0  0" >> /etc/fstab' $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
-
+########Install variable's########
 do_install_nfs_server() {
   apt-get update
   apt-get install nfs-kernel-server -y
   ufw allow 2049
   whiptail --msgbox "You can broadcast your NFS server and set it up in webmin: https://$ADDRESS:10000" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
-
+########Install variable's########
 do_install_ddclient() {
 function ask_yes_or_no() {
     read -p "$1 ([y]es or [N]o): "
@@ -796,7 +788,7 @@ else
 sleep 1
 fi
 }
-
+########Install variable's########
 do_install_letsencrypt() {
 function ask_yes_or_no() {
     read -p "$1 ([y]es or [N]o): "
@@ -885,12 +877,12 @@ else
     	wget $REPO/letsencrypt.sh -P $SCRIPTS/
 fi
 }
-
+########Install variable's########
 do_install_rsync() {
   sudo apt-get update
   sudo apt-get install rsync -y
 }
-
+#########################################Update tool########################################################
 do_update() {
   apt-get autoclean
   apt-get autoremove
@@ -899,9 +891,7 @@ do_update() {
   apt-get -f install
   dpkg --configure --pending
 }
-
 #########################################Atomic toolkit########################################################
-
 do_atomic() {
   apt-get -y install git-core
   
@@ -918,11 +908,8 @@ do_atomic() {
   sudo bash setup.sh
   cd
 }
-
 #########################################Multi Installer########################################################
-
 # Interactive use loop
-#
 calc_wt_size
 while true; do
   FUN=$(whiptail --title "https://www.techandme.se" --menu "Multi Installer" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Finish --ok-button Select \
