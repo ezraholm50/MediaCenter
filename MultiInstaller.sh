@@ -26,12 +26,13 @@ if [ "$(whoami)" != "root" ]; then
 fi
 #########################################Update########################################################
 # Run apt-get update, saves time. Instead of for every install running apt-get update
-{
-    for ((i = 0 ; i <= 100 ; i+=20)); do
-        sleep 1
+    {
+    i=1
+    while read -r line; do
+        i=$(( $i + 1 ))
         echo $i
     done < <(apt-get update)
-} | whiptail --gauge "Please wait while running apt-get update" 6 60 0
+    } | whiptail --title "Progress" --gauge "Please wait while updating repo's" 6 60 0
 #########################################Screen size########################################################
 calc_wt_size() {
   # NOTE: it's tempting to redirect stderr to /dev/null, so supress error 
