@@ -259,10 +259,11 @@ do_comodo_dns() {
 ######Tools variable's#######
 do_country_repo() {
 	$SHOWCOUNT=$(cat /etc/apt/sources.list)
-	whiptail --title "Notice your current country code (2 letters eg. NL, US)" 20 80
+	whiptail --msgbox "Notice your current country code (2 letters eg. NL, US)" 20 70
 	$COUNTRYCUR=$(whiptail --title "What is the current country code? (2 letters eg. NL, US)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
 	$COUNTRY=$(whiptail --title "What is your country code? (2 letters eg. NL, US)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
-	
+	sed -i "s|$COUNTRYCUR|$COUNTRY|" /etc/apt/sources.list
+	apt-get update
 }
 ######Tools variable's#######
 do_static_ip() {
@@ -487,8 +488,6 @@ sudo ufw deny 9987
 sudo ufw deny 10011
 sudo ufw deny 30033
 }
-######Firewall variable's#######
-
 #########################################Upgrade and update system and tool########################################################
 do_update_full() {
   apt-get autoclean -y
@@ -578,22 +577,18 @@ do_install_owncloud() {
 }
 ########Install variable's########
 do_install_networkmanager() {
-	apt-get update
 	apt-get install network-manager -y
 }
 ########Install variable's########
 do_install_landscape() {
-	apt-get update
 	apt-get install landscape-common -y
 }
 ########Install variable's########
 do_install_htop() {
-	apt-get update
 	apt-get install htop -y
 }
 ########Install variable's########
 do_install_samba() {
-	apt-get update
 	apt-get install samba smbfs -y
 	sed -i 's|;  security = user|security = user|g' /etc/samba/smb.conf
 	echo "username map = /etc/samba/smbusers" > /etc/samba/smb.conf
@@ -650,50 +645,45 @@ fi
 }
 ########Install variable's########
 do_install_webmin() {
-  wget http://prdownloads.sourceforge.net/webadmin/webmin_1.791_all.deb -P /tmp/
-  apt-get install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python -y
-  dpkg --install /tmp/webmin_1.791_all.deb
+  	wget http://prdownloads.sourceforge.net/webadmin/webmin_1.791_all.deb -P /tmp/
+  	apt-get install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python -y
+  	dpkg --install /tmp/webmin_1.791_all.deb
 }
 ########Install variable's########
 do_install_SSH_server() {
-  apt-get update
-  apt-get install openssh-server -y
-  sed -i 's|PermitEmptyPasswords yes|PermitEmptyPasswords no|g' /etc/ssh/sshd_config
+	apt-get install openssh-server -y
+  	sed -i 's|PermitEmptyPasswords yes|PermitEmptyPasswords no|g' /etc/ssh/sshd_config
 }
 ########Install variable's########
 do_install_SSH_client() {
-  apt-get update
-  apt-get install openssh-client -y
+  	apt-get install openssh-client -y
 }
 ########Install variable's########
 do_ssh() {
-  ufw allow 8822
-  ufw deny 22
-  sed -i 's|22|8822|g' /etc/ssh/sshd_config
-  echo
-  echo "After the reboot you can use port 8822 for SSH"
+  	ufw allow 8822
+  	ufw deny 22
+  	sed -i 's|22|8822|g' /etc/ssh/sshd_config
+  	echo
+  	echo "After the reboot you can use port 8822 for SSH"
 }
 ########Install variable's########
 do_clamav() {
-  apt-get update
-  apt-get install clamav -y
-  mkdir -p /infected
-  chmod -R nobody:nogroup /infected
-  chown -R 000 /infected
-  echo "freshclam && clamscan -r --move=/infected / && chown -R nodbody:nogroup /infected && chmod -R 000 /infected " >> /etc/cron.daily/clamscan.sh
-  chmod 754 /etc/cron.daily/clamscan.sh
+  	apt-get install clamav -y
+  	mkdir -p /infected
+  	chmod -R nobody:nogroup /infected
+  	chown -R 000 /infected
+  	echo "freshclam && clamscan -r --move=/infected / && chown -R nodbody:nogroup /infected && chmod -R 000 /infected " >> /etc/cron.daily/clamscan.sh
+  	chmod 754 /etc/cron.daily/clamscan.sh
 }
 ########Install variable's########
 do_fail2ban() {
-  apt-get update
-  apt-get install fail2ban -y
+  	apt-get install fail2ban -y
 }
 ########Install variable's########
 do_nginx() {
-  apt-get update
-  apt-get install nginx -y
-  ufw allow 443
-  ufw allow 80
+  	apt-get install nginx -y
+  	ufw allow 443
+  	ufw allow 80
 }
 ########Install variable's########
 do_teamspeak() {
@@ -754,17 +744,15 @@ fi
 }
 ########Install variable's########
 do_install_nfs_client() {
-  apt-get update
-  apt-get install nfs-common -y
-  ufw allow 2049 
-  whiptail --msgbox 'auto mount like this: echo "<nfs-server-IP>:/   /mount_point   nfs    auto  0  0" >> /etc/fstab' $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+	apt-get install nfs-common -y
+  	ufw allow 2049 
+  	whiptail --msgbox 'auto mount like this: echo "<nfs-server-IP>:/   /mount_point   nfs    auto  0  0" >> /etc/fstab' $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 ########Install variable's########
 do_install_nfs_server() {
-  apt-get update
-  apt-get install nfs-kernel-server -y
-  ufw allow 2049
-  whiptail --msgbox "You can broadcast your NFS server and set it up in webmin: https://$ADDRESS:10000" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+  	apt-get install nfs-kernel-server -y
+  	ufw allow 2049
+  	whiptail --msgbox "You can broadcast your NFS server and set it up in webmin: https://$ADDRESS:10000" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 ########Install variable's########
 do_install_ddclient() {
@@ -880,34 +868,32 @@ fi
 }
 ########Install variable's########
 do_install_rsync() {
-  sudo apt-get update
-  sudo apt-get install rsync -y
+  	apt-get install rsync -y
 }
 #########################################Update tool########################################################
 do_update() {
-  apt-get autoclean
-  apt-get autoremove
-  apt-get update
-  apt-get upgrade -y
-  apt-get -f install
-  dpkg --configure --pending
+  	apt-get autoclean
+  	apt-get autoremove
+  	apt-get update
+  	apt-get upgrade -y
+  	apt-get -f install
+  	dpkg --configure --pending
 }
 #########################################Atomic toolkit########################################################
 do_atomic() {
-  apt-get -y install git-core
-  
-  if 		[ -d /root/AtoMiC-ToolKit ];
-  then
+  	apt-get -y install git-core
+	if 		[ -d /root/AtoMiC-ToolKit ];
+  	then
 	sleep 1
-  else
-  cd /root
-  git clone https://github.com/htpcBeginner/AtoMiC-ToolKit ~/AtoMiC-ToolKit
-  cd
-  fi
+  	else
+  	cd /root
+  	git clone https://github.com/htpcBeginner/AtoMiC-ToolKit ~/AtoMiC-ToolKit
+  	cd
+  	fi
   
-  cd ~/AtoMiC-ToolKit
-  sudo bash setup.sh
-  cd
+	cd ~/AtoMiC-ToolKit
+  	bash setup.sh
+  	cd
 }
 #########################################Multi Installer########################################################
 # Interactive use loop
