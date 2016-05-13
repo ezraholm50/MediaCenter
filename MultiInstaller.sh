@@ -24,6 +24,14 @@ if [ "$(whoami)" != "root" ]; then
         whiptail --msgbox "Sorry you are not root. You must type: sudo bash /var/scripts/MultiInstaller.sh" 20 60 1
         exit
 fi
+#########################################Whiptail check########################################################
+	if [ $(dpkg-query -W -f='${Status}' whiptail 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+        echo "Whiptail is already installed!"
+
+else
+	apt-get install whiptail -y
+fi
 #########################################Update########################################################
 # Run apt-get update, saves time. Instead of for every install running apt-get update
     {
@@ -106,7 +114,7 @@ do_tools() {
       T16\ *) do_landscape ;;
       T17\ *) do_fancy ;;
       T18\ *) do_currentusers ;;
-      t19\ *) do_backup ;;
+      T19\ *) do_backup ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
@@ -115,14 +123,26 @@ do_tools() {
 do_backup() {
 	BACKUPDIR=$(whiptail --title "Backup directory? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT)
 	BACKUPDEST=$(whiptail --title "Backup destination? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT)
+	if [ $(dpkg-query -W -f='${Status}' rsync 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+        echo "Rsync is already installed!"
+
+else
 	apt-get install rsync -y
+fi
 	rsync -aAXv $BACKUPDIR $BACKUPDEST
 }
 ######Tools variable's#######
 do_currentusers()
 {
    	USERLIST=$(userlist)
-   	apt-get install cfingerd -y
+   	if [ $(dpkg-query -W -f='${Status}' cfingerd 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+        echo "Cfingerd is already installed!"
+
+else
+	apt-get install cfingerd -y
+fi
    	whiptail --msgbox "$USERLIST" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 ######Tools variable's#######
@@ -165,7 +185,23 @@ do_wlan() {
 	WLAN=$(whiptail --title "SSID, network name? (case sensetive)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
 	WLANPASS=$(whiptail --title "Wlan password? (case sensetive)" --passwordbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
 	if [ $exitstatus = 0 ]; then
-	apt-get install linux-firmware wpasupplicant -y
+	
+	if [ $(dpkg-query -W -f='${Status}' linux-firmware 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+        echo "Linux-firmware is already installed!"
+
+else
+	apt-get install linux-firmware -y
+fi
+
+	if [ $(dpkg-query -W -f='${Status}' wpasupplicant 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+        echo "Wpasupplicant is already installed!"
+
+else
+	apt-get install wpasupplicant -y
+fi
+	
 	ifup wlan0
 	iwconfig wlan0 essid $WLAN key s:$WLANPASS
 	ifdown wlan0
@@ -276,10 +312,10 @@ do_comodo_dns() {
 }
 ######Tools variable's#######
 do_country_repo() {
-	$SHOWCOUNT=$(cat /etc/apt/sources.list)
+	SHOWCOUNT=$(cat /etc/apt/sources.list)
 	whiptail --msgbox "Notice your current country code (2 letters eg. NL, US)" 20 70
-	$COUNTRYCUR=$(whiptail --title "What is the current country code? (2 letters eg. NL, US)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
-	$COUNTRY=$(whiptail --title "What is your country code? (2 letters eg. NL, US)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
+	COUNTRYCUR=$(whiptail --title "What is the current country code? (2 letters eg. NL, US)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
+	COUNTRY=$(whiptail --title "What is your country code? (2 letters eg. NL, US)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
 	sed -i "s|$COUNTRYCUR|$COUNTRY|" /etc/apt/sources.list
 	apt-get update
 }
@@ -341,8 +377,6 @@ bash /var/scripts/test_connection.sh
 sleep 2
 clear
 }
-######Tools variable's#######
-
 #########################################Firewall menu########################################################
 do_firewall() {
   FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "Firewall options" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
@@ -535,7 +569,7 @@ do_finish() {
 #########################################Install menu########################################################
 do_install_menu() {
   FUN=$(whiptail --title "Multi Installer - https://www.techandme.se" --menu "Package list" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT --cancel-button Back --ok-button Select \
-    "I1 Install Plex" "Media server, Public release no plexpass. Auto updates are set." \
+    "I1 Install Package" "User defined" \
     "I2 Install Webmin" "Graphical interface to manage headless systems" \
     "I3 Install SSH Server" "Needed by a remote machine to be accessable via SSH" \
     "I4 Install SSH Client" "Needed by the local machine to connect to a remote machine" \
@@ -555,13 +589,14 @@ do_install_menu() {
     "I18 Install Network manager" "Advanced network tools" \
     "I19 Install ownCloud" "Your own Dropbox/google drive" \
     "I20 Install OpenVpn" "Connect to a VPN server" \
+    "I21 Install Plex" "Media server, Public release no plexpass. Auto updates are set." \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
     return 0
   elif [ $RET -eq 0 ]; then
     case "$FUN" in
-      I1\ *) do_install_plex ;;
+      I1\ *) do_install_package ;;
       I2\ *) do_install_webmin ;;
       I3\ *) do_install_SSH_server ;;
       I4\ *) do_install_SSH_client ;;
@@ -581,11 +616,24 @@ do_install_menu() {
       I18\ *) do_install_networkmanager ;;
       I19\ *) do_install_owncloud ;;
       I20\ *) do_install_openvpn ;;
+      I21\ *) do_install_plex ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 #########################################Install menu########################################################
+do_install_package() {
+	PACKAGE=$(whiptail --title "Package name?" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT)
+	
+	if [ $(dpkg-query -W -f='${Status}' $PACKAGE 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+        echo "$PACKAGE is already installed!"
+
+else
+	apt-get install $PACKAGE -y
+fi
+}
+########Install variable's########
 do_install_openvpn() {
 	apt-get install openvpn -y
 }
