@@ -27,7 +27,7 @@ fi
 #########################################Whiptail check########################################################
 	if [ $(dpkg-query -W -f='${Status}' whiptail 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then
-        echo "Whiptail is already installed!"
+        sleep 0
 
 else
 	apt-get install whiptail -y
@@ -90,6 +90,7 @@ do_tools() {
     "T17 Add progress bar" "To apt / apt-get update/install/upgrade" \
     "T18 Current users" "Show current users logged in" \
     "T19 Backup with rsync" "Lets you choose dir/file and dest" \
+    "T20 List directory" "Files and permissions" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -115,14 +116,21 @@ do_tools() {
       T17\ *) do_fancy ;;
       T18\ *) do_currentusers ;;
       T19\ *) do_backup ;;
+      T20\ *) do_listdir ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 #########################################tools menu########################################################
+do_listdir() {
+	LISTDIR=$(whiptail --title "Directory to list? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT 3>&1 1>&2 2>&3)
+	whiptail --msgbox "ls -la $LISTDIR" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+	
+}
+######Tools variable's#######
 do_backup() {
-	BACKUPDIR=$(whiptail --title "Backup directory? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT)
-	BACKUPDEST=$(whiptail --title "Backup destination? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT)
+	BACKUPDIR=$(whiptail --title "Backup directory? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT 3>&1 1>&2 2>&3)
+	BACKUPDEST=$(whiptail --title "Backup destination? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT 3>&1 1>&2 2>&3)
 	if [ $(dpkg-query -W -f='${Status}' rsync 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then
         echo "Rsync is already installed!"
@@ -133,8 +141,7 @@ fi
 	rsync -aAXv $BACKUPDIR $BACKUPDEST
 }
 ######Tools variable's#######
-do_currentusers()
-{
+do_currentusers() {
    	USERLIST=$(userlist)
    	if [ $(dpkg-query -W -f='${Status}' cfingerd 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then
