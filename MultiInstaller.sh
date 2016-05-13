@@ -13,7 +13,6 @@ NETMASK=$(ifconfig $IFACE | grep Mask | sed s/^.*Mask://)
 GATEWAY=$($IP route | awk '/default/ { print $3 }')
 SCRIPTS="/var/scripts"
 REPO="https://github.com/ezraholm50/MultiInstaller/raw/master"
-COUNTRY="nl" # use your own 2 letter country code for best speeds of the ubuntu/other repo's in sources.list
 INTERACTIVE=True
 DIR='/etc/update-motd.d'
 ASK_TO_REBOOT=0
@@ -148,7 +147,6 @@ do_wlan() {
 	WLAN=$(whiptail --title "SSID, network name? (case sensetive)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
 	WLANPASS=$(whiptail --title "Wlan password? (case sensetive)" --passwordbox "Navigate with TAB to hit ok to enter input" 10 60 3>&1 1>&2 2>&3)
 	if [ $exitstatus = 0 ]; then
-	apt-get update
 	apt-get install linux-firmware wpasupplicant -y
 	ifup wlan0
 	iwconfig wlan0 essid $WLAN key s:$WLANPASS
@@ -243,25 +241,28 @@ No other symbols, punctuation characters, or blank spaces are permitted.\
 }
 ######Tools variable's#######
 do_dist_upgrade() {
-  sudo apt-get update
-  sudo do-release-upgrade -y
+	do-release-upgrade -y
 }
 ######Tools variable's#######
 do_swappiness() {
-sed -i 's|vm.swappiness = |#vm.swappiness = |g' /etc/sysctl.conf
-echo "vm.swappiness = 1" >> /etc/sysctl.conf
-sysctl vm.swappiness=1
+	sed -i 's|vm.swappiness = |#vm.swappiness = |g' /etc/sysctl.conf
+	echo "vm.swappiness = 1" >> /etc/sysctl.conf
+	sysctl vm.swappiness=1
 }
 ######Tools variable's#######
 do_comodo_dns() {
-cat /dev/null > /etc/resolvconf/resolv.conf.d/base
-echo "nameserver 8.26.56.26" >> /etc/resolvconf/resolv.conf.d/base
-echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
-resolvconf -u
+	cat /dev/null > /etc/resolvconf/resolv.conf.d/base
+	echo "nameserver 8.26.56.26" >> /etc/resolvconf/resolv.conf.d/base
+	echo "nameserver 8.20.247.20" >> /etc/resolvconf/resolv.conf.d/base
+	resolvconf -u
 }
 ######Tools variable's#######
 do_country_repo() {
-sed -i "s|gb|$COUNTRY|g" /etc/apt/sources.list
+	$SHOWCOUNT=$(cat /etc/apt/sources.list)
+	whiptail --title "Notice your current country code (2 letters eg. NL, US)" 20 80
+	$COUNTRYCUR=$(whiptail --title "What is the current country code? (2 letters eg. NL, US)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
+	$COUNTRY=$(whiptail --title "What is your country code? (2 letters eg. NL, US)" --inputbox "Navigate with TAB to hit ok to enter input" 10 60)
+	
 }
 ######Tools variable's#######
 do_static_ip() {
