@@ -91,6 +91,7 @@ do_tools() {
     "T18 Current users" "Show current users logged in" \
     "T19 Backup with rsync" "Lets you choose dir/file and dest" \
     "T20 List directory" "Files and permissions" \
+    "T21 Disable IPV6" "In grub"
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -117,11 +118,17 @@ do_tools() {
       T18\ *) do_currentusers ;;
       T19\ *) do_backup ;;
       T20\ *) do_listdir ;;
+      T21\ *) do_disableipv6 ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 #########################################tools menu########################################################
+do_disableipv6() {
+	sed -i 's|GRUB_CMDLINE_LINUX=""|GRUB_CMDLINE_LINUX="ipv6.disable=1"|g' /etc/default/grub
+	update-grub
+}
+
 do_listdir() {
 	LISTDIR=$(whiptail --title "Directory to list? Eg. /mnt/yourfolder" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT 3>&1 1>&2 2>&3)
 	LISTDIR1=$(ls -la $LISTDIR)
