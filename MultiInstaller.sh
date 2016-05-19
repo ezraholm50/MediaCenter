@@ -91,7 +91,7 @@ do_tools() {
     "T18 Current users" "Show current users logged in" \
     "T19 Backup with rsync" "Lets you choose dir/file and dest" \
     "T20 List directory" "Files and permissions" \
-    "T21 Disable IPV6" "In grub"
+    "T21 Disable IPV6" "In grub" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
