@@ -18,6 +18,8 @@ DIR='/etc/update-motd.d'
 ASK_TO_REBOOT=0
 WHOAMI=$(whoami)
 mkdir -p $SCRIPTS
+VBOX=
+VBOXEXT=
 #########################################Root check########################################################
 # Check if root
 if [ "$(whoami)" != "root" ]; then
