@@ -746,9 +746,15 @@ fi
 }
 ########Install variable's########
 do_install_webmin() {
-  	wget http://prdownloads.sourceforge.net/webadmin/webmin_1.791_all.deb -P /tmp/
   	apt-get install perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python -y
-  	dpkg --install /tmp/webmin_1.791_all.deb
+	echo 'deb http://download.webmin.com/download/repository sarge contrib' >> /etc/apt/sources.list
+	cd /root
+	wget http://www.webmin.com/jcameron-key.asc
+	apt-key add jcameron-key.asc
+	cd
+	apt-get update
+	apt-get install webmin -y
+	whiptail --msgbox "Webmin is installed https://$ADDRESS:10000" 20 60 1
 }
 ########Install variable's########
 do_install_SSH_server() {
@@ -853,7 +859,7 @@ do_install_nfs_client() {
 do_install_nfs_server() {
   	apt-get install nfs-kernel-server -y
   	ufw allow 2049
-  	whiptail --msgbox "You can broadcast your NFS server and set it up in webmin: https://$ADDRESS:10000" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
+  	whiptail --msgbox "You can broadcast your NFS server and set it up in webmin (when installed): https://$ADDRESS:10000" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT
 }
 ########Install variable's########
 do_install_ddclient() {
