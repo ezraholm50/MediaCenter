@@ -607,6 +607,7 @@ do_install_menu() {
     "I19 Install ownCloud" "Your own Dropbox/google drive" \
     "I20 Install OpenVpn" "Connect to a VPN server" \
     "I21 Install Plex" "Media server, Public release no plexpass. Auto updates are set." \
+    "I22 Install Vnc server" "With LXDE minimal/core desktop, only use with SSH." \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -634,11 +635,24 @@ do_install_menu() {
       I19\ *) do_install_owncloud ;;
       I20\ *) do_install_openvpn ;;
       I21\ *) do_install_plex ;;
+      I22\ *) do_install_vnc ;;
       *) whiptail --msgbox "Programmer error: unrecognized option" 20 60 1 ;;
     esac || whiptail --msgbox "There was an error running option $FUN" 20 60 1
   fi
 }
 #########################################Install menu########################################################
+do_install_vnc() {
+apt-get install xorg lxde-core tightvncserver -y
+tightvncserver :1
+tightvncserver -kill :1
+echo 'lxterminal &' >> ~/.vnc/xstartup
+echo '/usr/bin/lxsession -s LXDE &' >> ~/.vnc/xstartup
+/usr/bin/lxsession -s LXDE &
+tightvncserver :1
+ufw allow 5901
+whiptail --msgbox "Firewall port updated (5901). Start: tightvncserver :1 - Stop tightvncserver -kill :1" 20 60 1
+}
+########Install variable's########
 do_install_package() {
 	PACKAGE=$(whiptail --title "Package name?" --inputbox "Navigate with TAB to hit ok to enter input" $WT_HEIGHT $WT_WIDTH $WT_MENU_HEIGHT)
 	
