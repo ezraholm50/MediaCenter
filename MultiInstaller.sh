@@ -754,6 +754,7 @@ do_install_webmin() {
 	cd
 	apt-get update
 	apt-get install webmin -y
+	ufw allow 10000
 	whiptail --msgbox "Webmin is installed https://$ADDRESS:10000" 20 60 1
 }
 ########Install variable's########
